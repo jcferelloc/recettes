@@ -1,0 +1,139 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+
+<head>
+    <title>Livre de recettes</title>
+    <meta charset="utf-8">
+    <link rel="icon" type="image/png" href="img/toque.png">
+    <link rel="shortcut icon" type="image/x-icon" href="img/toque.ico">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=.5, shrink-to-fit=yes">
+    <style>
+        @font-face {
+            font-family: latoLight;
+            src: url(font/latolight.woff);
+        }
+    </style>
+
+    <script type="text/javascript" src="lib/jquery-3.2.1.min.js"></script>
+    <script>
+        var page = 0;
+        var nbPage = 0;
+        var mode = 1;
+
+        var gotoPage = function (page) {
+            if (page == 0 || (mode == 1 && page % 2 == 0)) {
+
+                $("#double").hide();
+                $("#gauche").hide();
+
+                $("#droite").show();
+                loadPage(page, "droiteContent");
+            }
+            else if (page == nbPage-1 || mode == 1 && page % 2 == 1) {
+                $("#droite").hide();
+                $("#double").hide();
+
+                $("#gauche").show();
+                loadPage(page, "gaucheContent");
+            }
+            else if (mode == 2) {
+                $("#droite").hide();
+                $("#gauche").hide();
+
+                $("#double").show();
+                loadPage(page, "doubleGaucheContent");
+                loadPage(page + 1, "doubleDroiteContent");
+            }
+        }
+
+        var loadPage = function (number, id) {
+            $.ajax({
+                method: "GET",
+                url: "page.php?format=html&number=" + number + "&" + Math.random(),
+                success: function (data) {
+                    $("#" + id).html(data);
+                }
+            });
+        };
+
+        $.ajax({
+            method: "GET",
+            url: "page.php?nbPage&" + Math.random(),
+            success: function (data) {
+                nbPage = parseInt(data);
+            }
+        });
+        $("document").ready(function () {
+
+            $("#next").click(function () {
+                if ( page >= nbPage-1 ){
+                    return;
+                }
+                if (page == 0 || mode == 1) {
+                    page++;
+                } else {
+                    page += 2;
+                }
+                gotoPage(page);
+            });
+            $("#prev").click(function () {
+                if (page > 0) {
+                    if (page == 1 || mode == 1) {
+                        page--;
+                    } else {
+                        page -= 2;
+                    }
+                    gotoPage(page);
+                }
+            });
+            $('#pdf').click(function () {
+                window.open("generatePDF.php?start=0&nb=1");
+            });
+
+            gotoPage(0);
+        });
+
+    </script>
+
+</head>
+
+<body>
+
+    <div style="background-color:rgb(138, 136, 136);padding:20px; padding:20px;margin-top:30px; ">
+        <img src="img/suivant.png" alt="suivant" id="next" style="position:absolute;top:100px; right:20px;width:40px;height:40px;cursor:pointer;">
+        <img src="img/precedent.png" alt="precedent" id="prev" style="position:absolute;top:100px; left:20px;width:40px;height:40px;cursor:pointer;">
+
+        <div id="pdf" style="position:absolute;top:10px; left:20px;width:40px;height:40px;cursor:pointer;margin:5px; border:solid 1px black;">
+            PDF</div>
+
+
+
+        <div id="double" style="display:none;position:relative;  box-shadow: 10px 10px 5px #000000; width:1570px; height:551px;margin:auto;">
+
+            <div style="position:absolute;top:0px;bottom:0px; left:0px; width:210mm;height:100%;background-color:white;">
+                <div id="doubleGaucheContent"></div>
+            </div>
+
+            <div style="position:absolute;top:0px;bottom:0px; left:790px; width:210mm;height:100%;">
+                <div style="position:absolute;top:0px;bottom:0px; left:0px; width:100%;height:100%;background-color:white;">
+                    <div id="doubleDroiteContent" ></div>
+                </div>
+            </div>
+            <img src="img/spirale-2pages.png" alt="" style="position:absolute;height:551px;left:754px;">
+        </div>
+
+        <div id="droite" style="display:none;position:relative;  box-shadow: 10px 10px 5px #000000; width:210mm; height:551px;margin:auto;background-color:white;">
+                <img src="img/spirale-1page.png" alt="" style="position:absolute;height:551px;left:-20px;">
+            <div id="droiteContent" ></div>
+            
+        </div>
+
+        <div id="gauche" style="display:none;position:relative;  box-shadow: 10px 10px 5px #000000; width:210mm; height:551px;margin:auto;background-color:white;">
+                <img src="img/spirale-1page-d.png" alt="" style="position:absolute;height:551px;right:-20px;">
+                <div id="gaucheContent" ></div>
+        </div>
+    </div>
+</body>
+
+</html>

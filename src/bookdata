@@ -1,0 +1,7 @@
+{
+	"data" : [
+		{"type":"plats", "titre":"La cocotte au four de mamy", "nom":"Emilie Le Gall", "presentation":"C'est une recette toute simple, pas clinquante, mais avec une pièce de viande de qualité et des pommes de terre adéquates pour le four, c'est un vrai délice : la viande, les pommes de terre et les oignons sont bien dorés, à la fois fondants et croustillants... Hum !!!"},  
+		{"type":"plats", "titre":"Le poulet grillé", "nom":"Theo Kervella", "presentation":"..."}, 
+		{"type":"dessert", "titre":"Le flan coco", "nom":"Lea", "presentation":"..."} 
+	]
+}
