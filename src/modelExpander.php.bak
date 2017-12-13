@@ -1,10 +1,13 @@
 <?php
 
-include "recettes.php";
 
 
-
-$data = $recettes;
+$dataJS = file_get_contents("bookdata");
+$data = json_decode ($dataJS);
+if ( json_last_error() != 0 ) {
+	echo "error read data";
+	exit;
+}
 
 
 function getExpandedModel($modelFileName){
@@ -63,8 +66,7 @@ function replaceElementVars($value, $section, $dataPage ){
 				return $section->{$vars[2]};
 			}
 			if ( $vars[1] == "page" ) {
-				//var_dump($dataPage);
-				return $dataPage[$vars[2]];
+				return $dataPage->{$vars[2]};
 			}
 		}
 	} else if ( gettype( $value ) == "array"){
@@ -89,9 +91,8 @@ function getDataPages( $criteria, $criteria_value ){
 	
 	$dataPages = array();
 	
-	foreach($data as $dataPage){
-
-		if ( $dataPage[$criteria] == $criteria_value ){
+	foreach($data->{"data"} as $dataPage){
+		if ( $dataPage->{$criteria} == $criteria_value ){
 			$dataPages[]=$dataPage;
 		}
 	}

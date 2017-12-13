@@ -21,7 +21,8 @@ if ($nb==0){
 $pdf = new FPDF($model->{'orientation'},'mm', $model->{'format'});
 $pdf->AddFont('latoLight','','latolight.php');
 $pdf->SetFont('latoLight','',16);
-$pdf->SetMargins(0.01,0.01);
+$pdf->SetMargins(0,0);
+$pdf->SetAutoPageBreak(false);
 
 for ( $number = $start; $number < $start+$nb ; $number++ ){
     pagePDF($number);

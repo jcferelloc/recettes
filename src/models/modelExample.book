@@ -3,6 +3,21 @@
 		{
 			"background-img":"img\/couverture.jpg"
 		},
+		{
+			"elements":[
+				{"type":"text","align":"center","fontsize":"16","top":"50", "left":"30", "width":"150",  "color":"#081350","value":"Ce livre à été réalisé par l'Amicale des Parents d'Elèves de l'école des sources du Drennec."},
+				{"type":"text","align":"center","fontsize":"16","top":"63", "left":"30", "width":"150",  "color":"#081350","value":"C'est une collection de recettes originales proposées par les familles des élèves."}
+			]
+
+		},
+		{
+			"background-color": "#1FD1C2", "elements":[
+				{
+					"type":"text","value":"Les entrées","align":"right","fontsize":"30","top":"80", "left":"0", "width":"190", "color":"#FFFFFF"
+				}
+			]
+		}
+        ,
 		{},
 		{
 			"background-color": "#D2691E", "elements":[
@@ -14,15 +29,22 @@
         ,
 		{
 			"section":{ 
-				"criteria":"type", "criteria_value":"plats", "color":"#D2691E","pages":[
+				"criteria":"categorie", "criteria_value":"1", "color":"#D2691E","pages":[
 					{
 						"background-color": "#FFFFFF", "elements":[
 						{"type":"text","value":"@page@titre","align":"center","fontsize":"30","top":"10", "left":"0", "width":"210",  "color":"@section@color"},
-						{"type":"text","value":"Presentation","align":"left","fontsize":"16","top":"25", "left":"10", "width":"120",  "color":"#A2D21E"},
+						
+						{"type":"text","value":"Présentation","align":"left","fontsize":"16","top":"25", "left":"10", "width":"120",  "color":"#A2D21E"},
 						{"type":"text","value":"@page@presentation","align":"left","fontsize":"10","top":"32", "left":"10", "width":"180",  "color":"#081350"},
-						{"type":"text","value":"Ingredients","align":"left","fontsize":"16","top":"50", "left":"10", "width":"50",  "color":"#A2D21E"},
+						
+						{"type":"text","value":"Ingrédients","align":"left","fontsize":"16","top":"50", "left":"10", "width":"50",  "color":"#A2D21E"},
+						{"type":"text","value":"@page@ingredients","align":"left","fontsize":"10","top":"57", "left":"10", "width":"50",  "color":"#081350"},
+						
 						{"type":"text","value":"Préparation","align":"left","fontsize":"16","top":"50", "left":"70", "width":"120",  "color":"#A2D21E"},
-						{"type":"text","value":"Indications","align":"left","fontsize":"16","top":"120", "left":"10", "width":"180",  "color":"#A2D21E"}
+						{"type":"text","value":"@page@preparation","align":"left","fontsize":"10","top":"57", "left":"70", "width":"120",  "color":"#081350"},
+						
+						{"type":"text","value":"Indications","align":"left","fontsize":"16","top":"120", "left":"10", "width":"180",  "color":"#A2D21E"},
+						{"type":"text","value":"@page@indications","align":"left","fontsize":"10","top":"127", "left":"10", "width":"180", "color":"#081350"}
 						]
 					}, 
 					{
@@ -36,6 +58,30 @@
 					
 				]
 			}
+		},
+		{},
+		{
+			"background-color": "#8FCC1E", "elements":[
+				{
+					"type":"text","value":"Les desserts","align":"right","fontsize":"30","top":"80", "left":"0", "width":"190", "color":"#FFFFFF"
+				}
+			]
+		}
+        ,
+		{},
+		{
+			"background-color": "#CE1E6D", "elements":[
+				{
+					"type":"text","value":"Divers","align":"right","fontsize":"30","top":"80", "left":"0", "width":"190", "color":"#FFFFFF"
+				}
+			]
+		}
+        ,
+		{
+			"elements":[
+				{"type":"text","align":"center","fontsize":"16","top":"50", "left":"30", "width":"150",  "color":"#081350","value":"S P O N S O R S"}
+			]
+
 		}
 	]
 }

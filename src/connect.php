@@ -8,9 +8,11 @@ function connect(){
 		$sql["login"]='jc.ferelloc'; //Nom d utilisateur vous permettant de vous connecter à votre base de donné
 		$sql["pass"]='libellul'; //votre mot de passe
 		$sql["base"]='jc.ferelloc'; //nom de votre base de donnés (le meme que le login chez free.fr)
-
+/*
 		$sql["connect"]=mysql_connect($sql["serveur"],$sql["login"],$sql["pass"])or die ("impossible de se connecter, réessayé plus tard");
-		$sql["select_base"]=mysql_select_db($sql["base"],$sql["connect"])or die ("erreur de connexion base");
+    $sql["select_base"]=mysql_select_db($sql["base"],$sql["connect"])or die ("erreur de connexion base");
+*/    
+    $connection = new mysqli($sql["serveur"],$sql["login"],$sql["pass"], $sql["base"]);
 		$TABLES["recettes"] = "ape2018_recettes";
     $TABLES["users"] = "ape2018_users";
 	}
