@@ -28,6 +28,7 @@
                 $("#gauche").hide();
 
                 $("#droite").show();
+                
                 loadPage(page, "droiteContent");
             }
             else if (page == nbPage-1 || mode == 1 && page % 2 == 1) {
@@ -35,6 +36,7 @@
                 $("#double").hide();
 
                 $("#gauche").show();
+                
                 loadPage(page, "gaucheContent");
             }
             else if (mode == 2) {
@@ -42,12 +44,29 @@
                 $("#gauche").hide();
 
                 $("#double").show();
+                
                 loadPage(page, "doubleGaucheContent");
                 loadPage(page + 1, "doubleDroiteContent");
             }
         }
 
+        var calcZoom = function (){
+            var w = 210;
+            var h = 149;
+            if (mode == 2){
+                w*=2;
+            }
+            var bodyWidth = ($('#backgroundBook').width() - 140) * 0.264583333333334;
+            var bodyHeight = ($('#backgroundBook').height() - 20) * 0.264583333333334;
+            var zoom = "" + Math.min(bodyWidth / w, bodyHeight / h) *100 + "%";
+            console.log ("zoom:" + zoom );
+            $("#double").css({zoom: zoom});
+            $("#gauche").css({zoom: zoom});
+            $("#droite").css({zoom: zoom});
+        }
+
         var loadPage = function (number, id) {
+            $("#" + id).html("");
             $.ajax({
                 method: "GET",
                 url: "page.php?format=html&number=" + number + "&" + Math.random(),
@@ -66,7 +85,7 @@
         });
         $("document").ready(function () {
 
-            $("#next").click(function () {
+            $(".next").click(function () {
                 if ( page >= nbPage-1 ){
                     return;
                 }
@@ -77,7 +96,7 @@
                 }
                 gotoPage(page);
             });
-            $("#prev").click(function () {
+            $(".prev").click(function () {
                 if (page > 0) {
                     if (page == 1 || mode == 1) {
                         page--;
@@ -87,51 +106,86 @@
                     gotoPage(page);
                 }
             });
-            $('#pdf').click(function () {
-                window.open("generatePDF.php?start=0&nb=1");
-            });
-
+            
+            $(window).on('resize', function (){
+                calcZoom();
+            })
+            calcZoom();
             gotoPage(0);
         });
 
     </script>
+    <style>
+        .button{
+            cursor:pointer;
+            color: #FFF; 
+            background-color: #0095ff; 
+            border: 1px solid #07c; 
+            border-radius: 2px; 
+            box-shadow: inset 0 1px 0 #66bfff;
+            padding:10px;
+            display: inline-block;
+        }
+        .pageBook{
+            border:solid 1px #EEEEEE;
+            height:100%;
+            background-color:white; 
+            box-shadow: 5px 5px 5px #333333; 
+        }
+        .prev{
+            position:absolute;
+            top:40%; 
+            left:-30px;
+            width:40px;
+            height:40px;
+            cursor:pointer;
+        }
+        .next{
+            position:absolute;
+            top:40%;
+            right:-30px;
+            width:40px;
+            height:40px;
+            cursor:pointer;
+        }
+    </style>
 
 </head>
 
-<body>
+<body style="font-family: Arial">
+    <div id="topBar" style="padding:10px; font-size: 20px;top:0px; left:0px; right:0px;  text-align:center; ">Livre de recettes - APE Le Drennec 2018</div>
 
-    <div style="background-color:rgb(138, 136, 136);padding:20px; padding:20px;margin-top:30px; ">
-        <img src="img/suivant.png" alt="suivant" id="next" style="position:absolute;top:100px; right:20px;width:40px;height:40px;cursor:pointer;">
-        <img src="img/precedent.png" alt="precedent" id="prev" style="position:absolute;top:100px; left:20px;width:40px;height:40px;cursor:pointer;">
+    <div id="myAccount" class="button" style="position: absolute; top:10px; left:10px;"> Mes recettes </div>
+    
+        
+    <div id="backgroundBook" style="position:absolute;padding:20px; top:50px; left:0px; right:0px; bottom:0px; ">
+        
+        
+        <div id="double" style="display:none;position:relative;   width:423mm; height:148mm; margin:auto;">
 
-        <div id="pdf" style="position:absolute;top:10px; left:20px;width:40px;height:40px;cursor:pointer;margin:5px; border:solid 1px black;">
-            PDF</div>
-
-
-
-        <div id="double" style="display:none;position:relative;  box-shadow: 10px 10px 5px #000000; width:1570px; height:551px;margin:auto;">
-
-            <div style="position:absolute;top:0px;bottom:0px; left:0px; width:210mm;height:100%;background-color:white;">
+            <div style="position:absolute;top:0px;bottom:0px; " class="pageBook">
                 <div id="doubleGaucheContent"></div>
             </div>
 
-            <div style="position:absolute;top:0px;bottom:0px; left:790px; width:210mm;height:100%;">
-                <div style="position:absolute;top:0px;bottom:0px; left:0px; width:100%;height:100%;background-color:white;">
-                    <div id="doubleDroiteContent" ></div>
-                </div>
+            <div style="position:absolute;top:0px;bottom:0px; left:213mm;" class="pageBook" >
+                <div id="doubleDroiteContent" ></div>
             </div>
-            <img src="img/spirale-2pages.png" alt="" style="position:absolute;height:551px;left:754px;">
-        </div>
-
-        <div id="droite" style="display:none;position:relative;  box-shadow: 10px 10px 5px #000000; width:210mm; height:551px;margin:auto;background-color:white;">
-                <img src="img/spirale-1page.png" alt="" style="position:absolute;height:551px;left:-20px;">
-            <div id="droiteContent" ></div>
+            <img src="img/spirale-2pages.png" alt="" style="position:absolute;height:100%;left:203mm;">
+            <img src="img/suivant.png" alt="suivant" class="next" >
+            <img src="img/precedent.png" alt="precedent" class="prev" >
             
         </div>
 
-        <div id="gauche" style="display:none;position:relative;  box-shadow: 10px 10px 5px #000000; width:210mm; height:551px;margin:auto;background-color:white;">
-                <img src="img/spirale-1page-d.png" alt="" style="position:absolute;height:551px;right:-20px;">
-                <div id="gaucheContent" ></div>
+        <div id="droite" style="display:none;position:relative; width:210mm; height:148mm;margin:auto;"  class="pageBook">
+            <img src="img/spirale-1page.png" alt="" style="position:absolute;height:100%;left:-20px;">
+            <img src="img/suivant.png" alt="suivant" class="next" >
+            <div id="droiteContent" ></div>
+        </div>
+
+        <div id="gauche" style="display:none;position:relative; width:210mm; height:148mm;margin:auto; "  class="pageBook">
+            <img src="img/spirale-1page-d.png" alt="" style="position:absolute;height:100%;right:-20px;">
+            <img src="img/precedent.png" alt="precedent" class="prev" >
+            <div id="gaucheContent" ></div>
         </div>
     </div>
 </body>
