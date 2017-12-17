@@ -39,17 +39,83 @@ function getExpandedModel($modelFileName){
 				
 			}  
 			array_splice ($model->{"pages"}, $idx, 1, $pageExpanded);
+			$idx+=count($pageExpanded);
+		} else{
+			$pageExpanded = array();
+			$newPage =  cloneJS( $page );
+			replaceVars($newPage,[],[] );
+			$pageExpanded[] = $newPage;
+			array_splice ($model->{"pages"}, $idx, 1, $pageExpanded);
+			$idx++;
 		}
 		
+		
+	}
+
+	// page number replacement
+	$idx=0;
+	foreach ( $model->{"pages"} as $page ){
+		$pageExpanded = array();
+		$newPage =  cloneJS( $page );
+		replaceNumPage($model, $newPage);
+		$pageExpanded[] = $newPage;
+		array_splice ($model->{"pages"}, $idx, 1, $pageExpanded);
 		$idx++;
 	}
+
+	file_put_contents ( "models/expanded",json_encode($model) );
+
 	return $model;
 }
 
+function replaceNumPage($model, $newPage){
+	foreach( $newPage as $key => $value){
+		$newPage->{$key}=replaceElementNumPage($model, $value );
+	}
+	return $newPage;
+}
+function replaceElementNumPage($model, $value ){
+	if ( gettype( $value ) == "string"){
+		if ( preg_match('/@(\w+)@(\w+)@(.+)/', $value, $vars) == 1 && count($vars)==4 ){
+			if ( $vars[1] == "numero_page" ) {
+				return getNumPage($model, $vars[2], $vars[3]);
+			}
+			return $value;
+		}
+	} else if ( gettype( $value ) == "array"){
+		$values = array();
+		foreach( $value as $e){
+			$values[] = replaceElementNumPage($model, $e );
+		}
+		return $values;
+	}
+	else{
+		
+		foreach( $value as $key => $subValue){
+			$value->{$key} = replaceElementNumPage($model, $subValue );
+		}
+		return $value;
+	}
+	return $value;
+}
 
+function getNumPage($model, $property, $value){
+	//echo "GetnumPage";
+	for ( $number = 0; $number < count($model->{"pages"}) ; $number++ ){
+		if ( isset($model->{"pages"}[$number]->{'elements'})){
+			foreach ($model->{"pages"}[$number]->{"elements"} as $element ){
+				//echo $element->{'type'} ." / " . $element->{'name'} ." / " . $element->{'value'} ." =? " . $property ." / " . $value ;
+				if ( $element->{'type'} == "property" && $element->{'name'}==$property && $element->{'value'}==$value){
+					return $number;
+				}
+			}
+		}
+	}
+}
 
 
 function replaceVars($newPage, $section, $dataPage ){
+	
 	foreach( $newPage as $key => $value){
 		$newPage->{$key}=replaceElementVars($value, $section, $dataPage );
 	}
@@ -57,15 +123,21 @@ function replaceVars($newPage, $section, $dataPage ){
 }
 
 function replaceElementVars($value, $section, $dataPage ){
+
 	if ( gettype( $value ) == "string"){
-		if ( preg_match('/@(\w+)@(\w+)/', $value, $vars) == 1 && count($vars)==3 && ($vars[1]=="section" || $vars[1]=="page") ){
+		if ( preg_match('/@(\w+)@(.+)/', $value, $vars) == 1 && count($vars)==3 ){
 			if ( $vars[1] == "section" ) {
 				return $section->{$vars[2]};
 			}
 			if ( $vars[1] == "page" ) {
-				//var_dump($dataPage);
 				return $dataPage[$vars[2]];
 			}
+			if ( $vars[1] == "url" ) {
+				$content = file_get_contents($vars[2]);
+				//var_dump($content);
+				return $content;
+			}
+			return $value;
 		}
 	} else if ( gettype( $value ) == "array"){
 		$values = array();

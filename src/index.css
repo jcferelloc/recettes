@@ -1,0 +1,102 @@
+.button {
+    cursor: pointer;
+    color: #FFF;
+    background-color: #0095ff;
+    border: 1px solid #07c;
+    border-radius: 2px;
+    box-shadow: inset 0 1px 0 #66bfff;
+    padding: 10px;
+    display: inline-block;
+}
+
+.buttonCancel {
+    cursor: pointer;
+    color: #FFF;
+    background-color: #002a46;
+    border: 1px solid rgb(0, 9, 15);
+    border-radius: 2px;
+    box-shadow: inset 0 1px 0 #66bfff;
+    padding: 10px;
+    display: inline-block;
+}
+
+.buttonOther {
+    cursor: pointer;
+    color: rgb(0, 9, 15);
+    background-color: #3c4246;
+    border: 1px solid rgb(0, 9, 15);
+    border-radius: 2px;
+    box-shadow: inset 0 1px 0 #66bfff;
+    padding: 10px;
+    display: inline-block;
+}
+
+.pageBook {
+    border: solid 1px #EEEEEE;
+    height: 100%;
+    background-color: white;
+    box-shadow: 5px 5px 5px #333333;
+}
+
+.prev {
+    position: absolute;
+    top: 40%;
+    left: -30px;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+}
+
+.next {
+    position: absolute;
+    top: 40%;
+    right: -30px;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+}
+
+
+.first {
+    position: absolute;
+    top: 50%;
+    left: -30px;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+}
+
+.last {
+    position: absolute;
+    top: 50%;
+    right: -30px;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+}
+
+.fillArea {
+    font-size: 10pt;
+    color: #081350;
+    background: none;
+    font-family: latoLight;
+    border: dashed 1px #CACACA;
+    resize: none;
+}
+
+.dropzone {
+    border: 2px dashed #bbb;
+    border-radius: 5px;
+    padding: 2mm;
+    text-align: center;
+    font-size: 12pt;
+    font-weight: bold;
+    color: #333333;
+    margin:0px;
+    background-clip: rgb(255,255,255,.8);
+    cursor:pointer;
+}
+
+.pageNumber{
+    cursor:pointer;
+}

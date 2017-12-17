@@ -8,6 +8,12 @@
     <link rel="shortcut icon" type="image/x-icon" href="img/toque.ico">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="viewport" content="width=device-width, initial-scale=.5, shrink-to-fit=yes">
+    <link rel="apple-touch-icon" href="img/toque.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="img/toque-72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="img/toque-114.png" />
+
+    <link rel="stylesheet" type="text/css" href="index.css"  /> 
+    
     <style>
         @font-face {
             font-family: latoLight;
@@ -16,178 +22,129 @@
     </style>
 
     <script type="text/javascript" src="lib/jquery-3.2.1.min.js"></script>
-    <script>
-        var page = 0;
-        var nbPage = 0;
-        var mode = 2;
+    <script  type="text/javascript" src="index.js"></script>
 
-        var gotoPage = function (page) {
-            if (page == 0 || (mode == 1 && page % 2 == 0)) {
-
-                $("#double").hide();
-                $("#gauche").hide();
-
-                $("#droite").show();
-                
-                loadPage(page, "droiteContent");
-            }
-            else if (page == nbPage-1 || mode == 1 && page % 2 == 1) {
-                $("#droite").hide();
-                $("#double").hide();
-
-                $("#gauche").show();
-                
-                loadPage(page, "gaucheContent");
-            }
-            else if (mode == 2) {
-                $("#droite").hide();
-                $("#gauche").hide();
-
-                $("#double").show();
-                
-                loadPage(page, "doubleGaucheContent");
-                loadPage(page + 1, "doubleDroiteContent");
-            }
-        }
-
-        var calcZoom = function (){
-            var w = 210;
-            var h = 149;
-            if (mode == 2){
-                w*=2;
-            }
-            var bodyWidth = ($('#backgroundBook').width() - 140) * 0.264583333333334;
-            var bodyHeight = ($('#backgroundBook').height() - 20) * 0.264583333333334;
-            var zoom = "" + Math.min(bodyWidth / w, bodyHeight / h) *100 + "%";
-            console.log ("zoom:" + zoom );
-            $("#double").css({zoom: zoom});
-            $("#gauche").css({zoom: zoom});
-            $("#droite").css({zoom: zoom});
-        }
-
-        var loadPage = function (number, id) {
-            $("#" + id).html("");
-            $.ajax({
-                method: "GET",
-                url: "page.php?format=html&number=" + number + "&" + Math.random(),
-                success: function (data) {
-                    $("#" + id).html(data);
-                }
-            });
-        };
-
-        $.ajax({
-            method: "GET",
-            url: "page.php?nbPage&" + Math.random(),
-            success: function (data) {
-                nbPage = parseInt(data);
-            }
-        });
-        $("document").ready(function () {
-
-            $(".next").click(function () {
-                if ( page >= nbPage-1 ){
-                    return;
-                }
-                if (page == 0 || mode == 1) {
-                    page++;
-                } else {
-                    page += 2;
-                }
-                gotoPage(page);
-            });
-            $(".prev").click(function () {
-                if (page > 0) {
-                    if (page == 1 || mode == 1) {
-                        page--;
-                    } else {
-                        page -= 2;
-                    }
-                    gotoPage(page);
-                }
-            });
-            
-            $(window).on('resize', function (){
-                calcZoom();
-            })
-            calcZoom();
-            gotoPage(0);
-        });
-
-    </script>
-    <style>
-        .button{
-            cursor:pointer;
-            color: #FFF; 
-            background-color: #0095ff; 
-            border: 1px solid #07c; 
-            border-radius: 2px; 
-            box-shadow: inset 0 1px 0 #66bfff;
-            padding:10px;
-            display: inline-block;
-        }
-        .pageBook{
-            border:solid 1px #EEEEEE;
-            height:100%;
-            background-color:white; 
-            box-shadow: 5px 5px 5px #333333; 
-        }
-        .prev{
-            position:absolute;
-            top:40%; 
-            left:-30px;
-            width:40px;
-            height:40px;
-            cursor:pointer;
-        }
-        .next{
-            position:absolute;
-            top:40%;
-            right:-30px;
-            width:40px;
-            height:40px;
-            cursor:pointer;
-        }
-    </style>
 
 </head>
 
-<body style="font-family: Arial">
+<body style="font-family: Arial; font-size:12px;">
     <div id="topBar" style="padding:10px; font-size: 20px;top:0px; left:0px; right:0px;  text-align:center; ">Livre de recettes - APE Le Drennec 2018</div>
 
-    <div id="myAccount" class="button" style="position: absolute; top:10px; left:10px;"> Mes recettes </div>
-    
-        
+    <div id="create" class="button" style="position: absolute; top:10px; left:10px;"> Créer une recette </div>
+    <div id="modify" class="button" style="display:none;position: absolute; top:10px; left:130px;"> Modifier la recette </div>
+
+
     <div id="backgroundBook" style="position:absolute;padding:20px; top:50px; left:0px; right:0px; bottom:0px; ">
-        
-        
+
+
         <div id="double" style="display:none;position:relative;   width:423mm; height:148mm; margin:auto;">
 
             <div style="position:absolute;top:0px;bottom:0px; " class="pageBook">
                 <div id="doubleGaucheContent"></div>
             </div>
 
-            <div style="position:absolute;top:0px;bottom:0px; left:213mm;" class="pageBook" >
-                <div id="doubleDroiteContent" ></div>
+            <div style="position:absolute;top:0px;bottom:0px; left:213mm;" class="pageBook">
+                <div id="doubleDroiteContent"></div>
             </div>
             <img src="img/spirale-2pages.png" alt="" style="position:absolute;height:100%;left:203mm;">
-            <img src="img/suivant.png" alt="suivant" class="next" >
-            <img src="img/precedent.png" alt="precedent" class="prev" >
-            
+            <img src="img/suivant.png" alt="suivant" class="next">
+            <img src="img/precedent.png" alt="precedent" class="prev">
+            <img src="img/last.png" alt="dernier" class="last">
+            <img src="img/first.png" alt="premier" class="first">
+
         </div>
 
-        <div id="droite" style="display:none;position:relative; width:210mm; height:148mm;margin:auto;"  class="pageBook">
+        <div id="droite" style="display:none;position:relative; width:210mm; height:148mm;margin:auto;" class="pageBook">
             <img src="img/spirale-1page.png" alt="" style="position:absolute;height:100%;left:-20px;">
-            <img src="img/suivant.png" alt="suivant" class="next" >
-            <div id="droiteContent" ></div>
+            <img src="img/suivant.png" alt="suivant" class="next">
+            <img src="img/last.png" alt="dernier" class="last">
+            <div id="droiteContent"></div>
         </div>
 
-        <div id="gauche" style="display:none;position:relative; width:210mm; height:148mm;margin:auto; "  class="pageBook">
+        <div id="gauche" style="display:none;position:relative; width:210mm; height:148mm;margin:auto; " class="pageBook">
             <img src="img/spirale-1page-d.png" alt="" style="position:absolute;height:100%;right:-20px;">
-            <img src="img/precedent.png" alt="precedent" class="prev" >
-            <div id="gaucheContent" ></div>
+            <img src="img/precedent.png" alt="precedent" class="prev">
+            <img src="img/first.png" alt="premier" class="first">
+            <div id="gaucheContent"></div>
         </div>
     </div>
+
+    <!-- ########################################################## -->
+    <div id="fillForm" style="display:none;position:absolute; left:0px; top:0px; right:0px; bottom:0px; background-color: rgba(0,0,0,.9)">
+
+
+        <div style="position:absolute; left:0px; top:40px; right:0px; bottom:0px; width:210mm; height:160mm; background-color:#FFFFFF;font-family:latoLight;margin:auto;">
+            <div style="display:inline-block;margin:10px; font-size:16px;">Categorie:</div>
+            <select id="edit_categorie" style="display:inline-block;margin:10px; font-size:16px;">
+                <option value="-1">Sélectionnez la catégorie de recette</option>
+                <option value="0">Entrée</option>
+                <option value="1">Plat</option>
+                <option value="2">Dessert</option>
+                <option value="3">Divers</option>
+            </select>
+            <div id="page1">
+                <div style="display:none;" id="edit_id"></div>
+                <div style="display:none;" id="edit_userID"></div>
+                <div style="position:absolute; text-align:center; left:0mm; top:10mm; width:210mm; font-size:30pt; color:#FAFAFA; ">Titre</div>
+                <input id="edit_titre" style="position:absolute; text-align:center; left:1mm; top:10mm; width:208mm; font-size:30pt; color:#D2691E; "
+                    class="fillArea">
+                <div style="position:absolute; text-align:left; left:10mm; top:25mm; width:120mm; font-size:16pt; color:#A2D21E; ">Presentation</div>
+                <div style="position:absolute; text-align:left; left:10mm; top:32mm; width:180mm; font-size:10pt; color:#FAFAFA; ">Indiquez ici une présentation de la recette</div>
+                <textarea id="edit_presentation" style="position:absolute; text-align:left; left:10mm; top:32mm; width:180mm; " class="fillArea"></textarea>
+                <div style="position:absolute; text-align:left; left:10mm; top:50mm; width:50mm; font-size:16pt; color:#A2D21E; ">Ingredients</div>
+                <textarea id="edit_ingredients" style="position:absolute; text-align:left; left:10mm; top:57mm; width:50mm; height:60mm;"
+                    class="fillArea"></textarea>
+                <div style="position:absolute; text-align:left; left:70mm; top:50mm; width:120mm; font-size:16pt; color:#A2D21E; ">Préparation</div>
+                <textarea id="edit_preparation" style="position:absolute; text-align:left; left:70mm; top:57mm; width:120mm; height:60mm;"
+                    class="fillArea"></textarea>
+                <div style="position:absolute; text-align:left; left:10mm; top:120mm; width:180mm; font-size:16pt; color:#A2D21E; ">Indications</div>
+                <textarea id="edit_indications" style="position:absolute; text-align:left; left:10mm; top:127mm; width:180mm; height:7mm;"
+                    class="fillArea"></textarea>
+            </div>
+            <div id="page2" style="display:none;">
+                <input id="edit_nom" style="position:absolute; text-align:right; left:0mm; top:20mm; width:120mm; font-size:30pt; color:#D2691E; "
+                    class="fillArea">
+                <div style="position:absolute; text-align:right; left:0mm; top:10mm; width:120mm; font-size:16pt; color:#A2D21E; ">Le chef</div>
+                
+                <img id="img_plat" src="img/plat.jpg" style="position:absolute; left:20mm; top:45mm; width:130mm;" onerror="this.src='img/plat.jpg'">
+                <div id="file_plat" class="dropzone" style="position:absolute; left:23mm; top:49mm; width:116mm; height:82mm; line-height:82mm; vertical-align: middle;">Cliquez ici pour choisir la photo du plat</div>
+                <img id="img_chef" src="img/chef.jpg" style="position:absolute; left:130mm; top:10mm; width:60mm;" onerror="this.src='img/chef.jpg'">
+                <div id="file_chef" class="dropzone" style="position:absolute; left:133mm; top:13mm; width:48mm; height:48mm; line-height:48mm; vertical-align: middle; ">
+                    <span style ="display: inline-block; vertical-align: middle; line-height: 14px;">Cliquez ici pour choisir la photo du chef !</span>
+                </div>
+                
+                <input type="file" id="img_plat_selector" name="img_platfile" style="display:none;" accept="image/*"/>
+                <input type="file" id="img_chef_selector" name="img_platfile" style="display:none;" accept="image/*"/>
+                
+            </div>
+            <div style="position:absolute; bottom:0px; margin:auto; padding:10px;">
+                <div id="validate" class="button"> Valider </div>
+                <div id="cancel" class="buttonCancel"> Annuler </div>
+                <div id="pageToggle" class="button">
+                    <span id="txtPage2">Page 2 &gt;&gt;</span>
+                    <span id="txtPage1" style="display:none">&lt;&lt; Page 1</span>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- ########################################################## -->
+
+    
+    <div id="message" style="display:none;position:absolute; left:0px; top:0px; right:0px; bottom:0px; background-color: rgba(0,0,0,.9)">
+            <div style="position:absolute; left:0px; top:0px; right:0px; bottom:0px; width:100mm; height:70mm; background-color:#FFFFFF;font-family:latoLight;margin:auto;">
+                    <div  class="" style="position:absolute; width:100mm; height:70mm; line-height:70mm; text-align: center; ;vertical-align: middle; ">
+                            <span id="message_text" style ="display: inline-block; font-size:14px; text-align: center;vertical-align: middle; line-height: 14px;">Message</span>
+                    </div>
+                    <div id="message_ok" class="button" style="position: absolute; bottom:10px; left:10px;"> Ok </div>
+            </div>
+    </div>        
+    <!-- ########################################################## -->
+
+    <div id="loading" style="display:none;position:absolute; left:0px; top:0px; right:0px; bottom:0px; background-color: rgba(255,255,255,.9)">
+            <img src="img/wait.gif" style=" position: absolute; margin: auto; top: 0; left: 0; right: 0; bottom: 0;">
+    </div>        
+    <!-- ########################################################## -->
 </body>
 
 </html>

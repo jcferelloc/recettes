@@ -6,7 +6,11 @@ require "modelExpander.php";
 
 include "formatSheet.php";
 
-$start = htmlspecialchars($_GET["start"]);
+$start = 0;
+if (isset($_GET["start"])){
+    $nb = htmlspecialchars($_GET["start"]);
+}
+
 $nb = 0;
 if (isset($_GET["nb"])){
     $nb = htmlspecialchars($_GET["nb"]);

@@ -61,9 +61,26 @@ function elementHTML($element){
         return textHTML($element);
         case "image":
         return imageHTML($element);
+        case "property":
+        return properyHTML($element);
     }
 }
 
+function properyHTML($element){
+    $value="";
+    $name="";
+    if ( isset($element->{'name'})){
+        $name = $element->{'name'};
+    }
+    if ( isset($element->{'value'})){
+        $value = $element->{'value'};
+    }
+    $html = "<div style=\"display:none;\" id=\"".  $name . "\">";
+    
+    $html .= $value;
+    $html .= "</div>";
+    return $html;
+}
 function textHTML($element){
     $value="";
     $align="";
@@ -73,6 +90,8 @@ function textHTML($element){
     $fontsize="";
     $color="";
     $height="";
+    $name="";
+    $class="";
     
 
     if ( isset($element->{'value'})){
@@ -99,9 +118,16 @@ function textHTML($element){
     if ( isset($element->{'color'})){
         $color = "color:" . $element->{'color'} ."; ";
     }
+    if ( isset($element->{'name'})){
+        $name = " id=\"" . $element->{'name'} ."\" ";
+    }
+    if ( isset($element->{'class'})){
+        $class = " class=\"" . $element->{'class'} ."\" ";
+    }
     
-    $html = "<div style=\"position:absolute; ".  $align. $left . $top . $width . $fontsize . $color ."\">";
-    $html .= $value;
+    $html = "<div " . $class . $name . " style=\"position:absolute; ".  $align. $left . $top . $width . $fontsize . $color ."\">";
+    
+    $html .= preg_replace("/\r\n/","<br>",$value);
     $html .= "</div>";
     return $html;
 }
@@ -111,7 +137,7 @@ function imageHTML($element){
     $left="left:0mm;";
     $top="top:0mm;";
     $width="";
-    
+    $name="";
 
     if ( isset($element->{'url'})){
         $url = $element->{'url'};
@@ -125,9 +151,12 @@ function imageHTML($element){
     if ( isset($element->{'width'})){
         $width = "width:" . $element->{'width'} ."mm; ";
     }
+    if ( isset($element->{'name'})){
+        $name = " id=\"" . $element->{'name'} ."\" ";
+    }
     
     
-    $html = "<img src=\"" . $url . "\" style=\"position:absolute; ".   $left . $top . $width ."\">";
+    $html = "<img " . $name . " src=\"" . $url . "\" alt=\"Pas de photo.\" style=\"position:absolute; ".   $left . $top . $width ."\" onerror=\"this.src=''\">";
 
     return $html;
 
