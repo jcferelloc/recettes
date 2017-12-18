@@ -70,7 +70,7 @@ var loadPage = function (number, id) {
         success: function (data) {
             $("#" + id).html(data);
             $(".pageNumber").click(function () {
-                gotoPage($(this).text());
+                gotoPage(parseInt($(this).text()));
             });
             if ($("#recette_id").text() != "") {
                 $("#modify").show();

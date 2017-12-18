@@ -153,8 +153,11 @@ function imagePDF($element){
     if ( isset($element->{'width'})){
         $width = $element->{'width'};
     }
-    
-    $pdf->Image($url,$left,$top,$width);
+    if (file_exists($url)){
+        $pdf->Image($url,$left,$top,$width);
+    }else{
+        $pdf->Image("img/missing.jpg",$left,$top,$width);
+    }
 
     
 }

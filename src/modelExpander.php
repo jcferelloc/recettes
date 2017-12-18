@@ -33,7 +33,7 @@ function getExpandedModel($modelFileName){
 				foreach($section->{"pages"} as $pageSection){
 					$newPage =  cloneJS( $pageSection );
 					
-					replaceVars($newPage, $section, $dataPage );
+					replaceVars($model, $newPage, $section, $dataPage );
 					$pageExpanded[] = $newPage;
 				}
 				
@@ -43,7 +43,7 @@ function getExpandedModel($modelFileName){
 		} else{
 			$pageExpanded = array();
 			$newPage =  cloneJS( $page );
-			replaceVars($newPage,[],[] );
+			replaceVars($model, $newPage,[],[] );
 			$pageExpanded[] = $newPage;
 			array_splice ($model->{"pages"}, $idx, 1, $pageExpanded);
 			$idx++;
@@ -57,7 +57,7 @@ function getExpandedModel($modelFileName){
 	foreach ( $model->{"pages"} as $page ){
 		$pageExpanded = array();
 		$newPage =  cloneJS( $page );
-		replaceNumPage($model, $newPage);
+		replaceNumPage($model, $newPage, $idx);
 		$pageExpanded[] = $newPage;
 		array_splice ($model->{"pages"}, $idx, 1, $pageExpanded);
 		$idx++;
@@ -68,16 +68,19 @@ function getExpandedModel($modelFileName){
 	return $model;
 }
 
-function replaceNumPage($model, $newPage){
+function replaceNumPage($model, $newPage, $idx){
 	foreach( $newPage as $key => $value){
-		$newPage->{$key}=replaceElementNumPage($model, $value );
+		$newPage->{$key}=replaceElementNumPage($model, $value, $idx );
 	}
 	return $newPage;
 }
-function replaceElementNumPage($model, $value ){
+function replaceElementNumPage($model, $value, $idx ){
 	if ( gettype( $value ) == "string"){
-		if ( preg_match('/@(\w+)@(\w+)@(.+)/', $value, $vars) == 1 && count($vars)==4 ){
+		if ( preg_match('/@(\w+)@(\w+)@(.*)/', $value, $vars) == 1 && count($vars)==4 ){
 			if ( $vars[1] == "numero_page" ) {
+				if ( $vars[2] == "current"){
+					return $idx;
+				}
 				return getNumPage($model, $vars[2], $vars[3]);
 			}
 			return $value;
@@ -85,14 +88,14 @@ function replaceElementNumPage($model, $value ){
 	} else if ( gettype( $value ) == "array"){
 		$values = array();
 		foreach( $value as $e){
-			$values[] = replaceElementNumPage($model, $e );
+			$values[] = replaceElementNumPage($model, $e, $idx );
 		}
 		return $values;
 	}
 	else{
 		
 		foreach( $value as $key => $subValue){
-			$value->{$key} = replaceElementNumPage($model, $subValue );
+			$value->{$key} = replaceElementNumPage($model, $subValue, $idx );
 		}
 		return $value;
 	}
@@ -114,18 +117,21 @@ function getNumPage($model, $property, $value){
 }
 
 
-function replaceVars($newPage, $section, $dataPage ){
+function replaceVars($model, $newPage, $section, $dataPage ){
 	
 	foreach( $newPage as $key => $value){
-		$newPage->{$key}=replaceElementVars($value, $section, $dataPage );
+		$newPage->{$key}=replaceElementVars($model, $value, $section, $dataPage );
 	}
 	return $newPage;
 }
 
-function replaceElementVars($value, $section, $dataPage ){
+function replaceElementVars($model, $value, $section, $dataPage ){
 
 	if ( gettype( $value ) == "string"){
 		if ( preg_match('/@(\w+)@(.+)/', $value, $vars) == 1 && count($vars)==3 ){
+			if ( $vars[1] == "document" ) {
+				return $model->{$vars[2]};
+			}
 			if ( $vars[1] == "section" ) {
 				return $section->{$vars[2]};
 			}
@@ -142,14 +148,14 @@ function replaceElementVars($value, $section, $dataPage ){
 	} else if ( gettype( $value ) == "array"){
 		$values = array();
 		foreach( $value as $e){
-			$values[] = replaceElementVars($e, $section, $dataPage );
+			$values[] = replaceElementVars($model, $e, $section, $dataPage );
 		}
 		return $values;
 	}
 	else{
 		
 		foreach( $value as $key => $subValue){
-			$value->{$key} = replaceElementVars($subValue, $section, $dataPage );
+			$value->{$key} = replaceElementVars($model, $subValue, $section, $dataPage );
 		}
 		return $value;
 	}
