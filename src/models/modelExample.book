@@ -1,7 +1,7 @@
 {
 	"format":"A5", "orientation":"L", "font": "latoLight", "pages":[
 		{
-			"background-img":"img\/couverture.jpg"
+			"background-img":"img\/couverture1.jpg"
 		},
 		{
 			"elements":[
@@ -12,17 +12,17 @@
 		{
 			"elements":[
 				{"type":"text","value":"Sommaire","align":"center","fontsize":"30","top":"15", "left":"0", "width":"210", "color":"#A2D21E"},
-				{"type":"text","value":"Les entrées","align":"left","fontsize":"20","top":"55", "left":"40", "width":"180", "color":"#0"},
-				{"type":"text","value":"Les plats","align":"left","fontsize":"20","top":"65", "left":"40", "width":"180", "color":"#0"},
-				{"type":"text","value":"Les desserts","align":"left","fontsize":"20","top":"75", "left":"40", "width":"180", "color":"#0"},
-				{"type":"text","value":"Autres recettes","align":"left","fontsize":"20","top":"85", "left":"40", "width":"180", "color":"#0"},
-				{"type":"text","value":"Table des recettes","align":"left","fontsize":"20","top":"95", "left":"40", "width":"180", "color":"#0"},
+				{"type":"text","value":"Les entrées","align":"left","fontsize":"20","top":"55", "left":"55", "width":"180", "color":"#0"},
+				{"type":"text","value":"Les plats","align":"left","fontsize":"20","top":"65", "left":"55", "width":"180", "color":"#0"},
+				{"type":"text","value":"Les desserts","align":"left","fontsize":"20","top":"75", "left":"55", "width":"180", "color":"#0"},
+				{"type":"text","value":"Autres recettes","align":"left","fontsize":"20","top":"85", "left":"55", "width":"180", "color":"#0"},
+				{"type":"text","value":"Table des recettes","align":"left","fontsize":"20","top":"95", "left":"55", "width":"180", "color":"#0"},
 
-				{"type":"text","class":"pageNumber", "value":"@numero_page@entete_categorie@0","align":"right","fontsize":"20","top":"55", "left":"140", "width":"20", "color":"#0"},
-				{"type":"text","class":"pageNumber", "value":"@numero_page@entete_categorie@1","align":"right","fontsize":"20","top":"65", "left":"140", "width":"20", "color":"#0"},
-				{"type":"text","class":"pageNumber", "value":"@numero_page@entete_categorie@2","align":"right","fontsize":"20","top":"75", "left":"140", "width":"20", "color":"#0"},
-				{"type":"text","class":"pageNumber", "value":"@numero_page@entete_categorie@3","align":"right","fontsize":"20","top":"85", "left":"140", "width":"20", "color":"#0"},
-				{"type":"text","class":"pageNumber", "value":"@numero_page@entete_categorie@4","align":"right","fontsize":"20","top":"95", "left":"140", "width":"20", "color":"#0"}
+				{"type":"text","class":"pageNumber", "value":"@numero_page@entete_categorie@0","align":"right","fontsize":"15","top":"57", "left":"55", "width":"100", "color":"#0"},
+				{"type":"text","class":"pageNumber", "value":"@numero_page@entete_categorie@1","align":"right","fontsize":"15","top":"67", "left":"55", "width":"100", "color":"#0"},
+				{"type":"text","class":"pageNumber", "value":"@numero_page@entete_categorie@2","align":"right","fontsize":"15","top":"77", "left":"55", "width":"100", "color":"#0"},
+				{"type":"text","class":"pageNumber", "value":"@numero_page@entete_categorie@3","align":"right","fontsize":"15","top":"87", "left":"55", "width":"100", "color":"#0"},
+				{"type":"text","class":"pageNumber", "value":"@numero_page@entete_categorie@4","align":"right","fontsize":"15","top":"97", "left":"55", "width":"100", "color":"#0"}
 				
 			]
 		},
@@ -214,8 +214,10 @@
 			]
 		},
 		{},{
+			
 			"elements":[
-				{"type":"text","align":"center","fontsize":"16","top":"50", "left":"30", "width":"150",  "color":"#081350","value":"S P O N S O R S"}
+				{"type":"image","url":"img/atable.jpg", "top":"15", "left":"55", "width":"100"},
+				{"type":"text","align":"center","fontsize":"20","top":"125", "left":"30", "width":"150",  "color":"#081350","value":"S P O N S O R S ?"}
 			]
 
 		}

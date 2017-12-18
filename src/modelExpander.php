@@ -63,7 +63,7 @@ function getExpandedModel($modelFileName){
 		$idx++;
 	}
 
-	file_put_contents ( "models/expanded",json_encode($model) );
+	//file_put_contents ( "models/expanded",json_encode($model) );
 
 	return $model;
 }

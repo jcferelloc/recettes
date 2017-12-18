@@ -100,3 +100,6 @@
 .pageNumber{
     cursor:pointer;
 }
+.pageNumber:hover{
+    border-bottom: solid 1px grey;
+}
