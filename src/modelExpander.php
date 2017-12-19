@@ -126,6 +126,9 @@ function replaceVars($model, $newPage, $section, $dataPage ){
 }
 
 function replaceElementVars($model, $value, $section, $dataPage ){
+	if ( isset($value->{"type"}) && $value->{"type"}=="list" ){
+		return $value; //replaceListVars($model, $value);
+	}
 
 	if ( gettype( $value ) == "string"){
 		if ( preg_match('/@(\w+)@(.+)/', $value, $vars) == 1 && count($vars)==3 ){
