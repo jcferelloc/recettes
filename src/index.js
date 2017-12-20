@@ -8,7 +8,7 @@ var sequenceID = 0;
 
 var gotoPage = function (page) {
     currentPage = page;
-    if ( currentPage != 0 && currentPage != nbPage - 1 && mode == 2 && currentPage % 2 == 0 ){
+    if (currentPage != 0 && currentPage != nbPage - 1 && mode == 2 && currentPage % 2 == 0) {
         currentPage -= 1;
     }
     if (currentPage == 0 || (mode == 1 && currentPage % 2 == 0)) {
@@ -75,7 +75,6 @@ var loadPage = function (number, id) {
             $(".listIndex").click(function () {
                 gotoRecette(undefined, parseInt($(this).attr("attribute")));
             });
-            
             if ($("#recette_id").text() != "") {
                 $("#modify").show();
             } else {
@@ -84,6 +83,15 @@ var loadPage = function (number, id) {
         }
     });
 };
+
+function handleImgError(img) {
+    if ($(img).attr("id") == "recette_img_plat") {
+        $("#recette_img_plat").attr('src', 'img/plat.jpg');
+    }
+    if ($(img).attr("id") == "recette_img_chef") {
+        $("#recette_img_chef").attr('src', 'img/chef.jpg');
+    };
+}
 
 function uploadAll() {
     if (sequenceID == -1) {
@@ -147,55 +155,86 @@ function checkRecette() {
         errorMessage += "- La catégorie dans laquelle la recette doit se trouver<br>"
     }
 
-    if (uploadOK) {
-        message_text = "Votre recette a été sauvegardée. <br>"
-
-        if ($('#img_plat_selector')[0].files.length == 1 || $('#img_chef_selector')[0].files.length == 1) {
-            if ($('#img_plat_selector')[0].files.length == 1 && $('#img_plat_selector')[0].files[0].size > 2 * 1024 * 1024) {
-                message_text += "La photo du plat n'a pas été sauvegardée car elle est trop volumineuse (max 2 Mega octets)<br>";
-            }
-            if ($('#img_chef_selector')[0].files.length == 1 && $('#img_chef_selector')[0].files[0].size > 2 * 1024 * 1024) {
-                message_text += "La photo du chef n'a pas été sauvegardée car elle est trop volumineuse (max 2 Mega octets)<br>";
-            }
-        }
-
-        if ($('#img_plat_selector')[0].files.length == 0 && $("#img_plat").attr('src') == "img/plat.jpg" &&
-            $('#img_chef_selector')[0].files.length == 0 && $("#img_chef").attr('src') == "img/chef.jpg") {
-            message_text += "Pensez à y ajouter les photos ! ";
-        } else if ($('#img_plat_selector')[0].files.length == 0 && $("#img_plat").attr('src') == "img/plat.jpg") {
-            message_text += "Pensez à y ajouter la photo du plat ! ";
-        } else if ($('#img_chef_selector')[0].files.length == 0 && $("#img_chef").attr('src') == "img/chef.jpg") {
-            message_text += "Pensez à y ajouter la photo du chef ! ";
-        }
-    }
-
-    // if ( $('#img_plat_selector')[0].files[0].size > 2 * 1024 * 1024 ){}
-
-
-
-
 
     if (!uploadOK) {
-        message_text = errorMessage;
-    }
-
-    $("#message_text").html(message_text);
-    $("#message").show();
-
-    if (!uploadOK) {
+        messageBox(errorMessage);
         return false;
     }
 
+
     sequenceID = -1;
     sequence = [
-        [uploadRecette, recetteID, idPhotos, action],
-        [uploadPhoto, "img_plat", recetteID + "_" + idPhotos],
-        [uploadPhoto, "img_chef", recetteID + "_" + idPhotos ],
-        [loadModel],
-        [gotoRecette, recetteID]
-    ];
+        [uploadRecette, recetteID, idPhotos, action]
+    ]
+
+    message_text = "Votre recette a été sauvegardée. <br><br>";
+    upload_img_plat = true;
+    upload_img_chef = true;
+
+    if ($('#img_plat_selector')[0].files.length == 1 || $('#img_chef_selector')[0].files.length == 1) {
+        if ($('#img_plat_selector')[0].files.length == 1 && $('#img_plat_selector')[0].files[0].size > 2 * 1024 * 1024) {
+            message_text += "La photo du plat n'a pas été sauvegardée car elle est trop volumineuse (max 2 Mega octets)<br>";
+            //$("#img_plat").attr('src', "img/plat.jpg");
+            upload_img_plat = false;
+        } else {
+            ratio = $("#img_plat").width() / $("#img_plat").height();
+            if (ratio < (4 / 3)) {
+                message_text += "La photo du plat n'a pas été sauvegardée car elle n'est pas en mode paysage.";
+            }
+        }
+        if ($('#img_chef_selector')[0].files.length == 1 && $('#img_chef_selector')[0].files[0].size > 2 * 1024 * 1024) {
+            message_text += "La photo du chef n'a pas été sauvegardée car elle est trop volumineuse (max 2 Mega octets)<br>";
+            //$("#img_chef").attr('src', "img/chef.jpg");
+            upload_img_chef = false;
+        }
+
+    }
+
+    if ($('#img_plat_selector')[0].files.length == 0 && $("#img_plat").attr('src') == "img/plat.jpg" &&
+        $('#img_chef_selector')[0].files.length == 0 && $("#img_chef").attr('src') == "img/chef.jpg") {
+        message_text += "Pensez à y ajouter les photos ! ";
+    } else if ($('#img_plat_selector')[0].files.length == 0 && $("#img_plat").attr('src') == "img/plat.jpg") {
+        message_text += "Pensez à y ajouter la photo du plat ! ";
+    } else if ($('#img_chef_selector')[0].files.length == 0 && $("#img_chef").attr('src') == "img/chef.jpg") {
+        message_text += "Pensez à y ajouter la photo du chef ! ";
+    }
+
+    messageBox(message_text);
+
+    if (upload_img_plat) sequence.push( [uploadPhoto, "img_plat", recetteID + "_" + idPhotos] );
+    if (upload_img_chef) sequence.push( [uploadPhoto, "img_chef", recetteID + "_" + idPhotos] );
+    sequence.push( [loadModel] );
+    sequence.push( [gotoRecette, recetteID] );
+
 
     return true;
+}
+
+function messageBox(text, okCallBack, cancelCallBack) {
+    $("#message_ok").unbind("click");
+    $("#message_cancel").unbind("click");
+    if (okCallBack == undefined) {
+        $("#message_ok").click(function () {
+            $("#message").hide();
+        });
+    } else {
+        $("#message_ok").click(function () {
+            okCallBack.call();
+            $("#message").hide();
+        });
+    }
+
+    if (cancelCallBack == undefined) {
+        $("#message_cancel").hide();
+    } else {
+        $("#message_cancel").click(function () {
+            cancelCallBack.call();
+            $("#message").hide();
+        });
+    }
+
+    $("#message_text").html(text);
+    $("#message").show();
 }
 
 function uploadRecette(callBack, recetteID, idPhotos, action) {
@@ -261,7 +300,8 @@ function loadPhoto(evt, imgID) {
     if (FileReader && files && files.length) {
         var fr = new FileReader();
         fr.onload = function () {
-            document.getElementById(imgID).src = fr.result;
+            $("#" + imgID + "").attr("src", fr.result);
+
         }
         fr.readAsDataURL(files[0]);
     }
@@ -290,8 +330,64 @@ function loadModel(callBack) {
     });
 }
 
+function isEditRecetteModified() {
+    if ($("#edit_id").text() != $("#recette_id").text() ||
+        $("#edit_userID").text() != $("#recette_userID").text() ||
+        $("#edit_titre").val() != $("#recette_titre").text() ||
+        $("#edit_presentation").val() != $("#recette_presentation").text() ||
+        $("#edit_ingredients").val() != $("#recette_ingredients").text() ||
+        $("#edit_preparation").val() != $("#recette_preparation").text() ||
+        $("#edit_indications").val() != $("#recette_indications").text() ||
+        $("#edit_nom").val() != $("#recette_nom").text() ||
+        $("#edit_categorie").val() != $("#recette_categorie").text() ||
+        $("#img_plat").attr("src") != $("#recette_img_plat").attr('src') ||
+        $("#img_chef").attr("src") != $("#recette_img_chef").attr('src')
+    ) {
+        return true;
+    }
+    return false;
+}
+
 // START
 loadModel();
+
+function checkEditRecetteChanges() {
+    if (isEditRecetteModified()) {
+        $("#validate").removeClass("buttonUnactive");
+        $("#validate").addClass("button");
+        $("#validate").click(function () {
+            if (!checkRecette()) {
+                return;
+            }
+
+            uploadAll();
+
+            $("#fillForm").hide();
+        });
+    } else {
+        $("#validate").addClass("buttonUnactive");
+        $("#validate").removeClass("button");
+        $("#validate").unbind("click");
+    }
+}
+
+function checkImagePlatRatio() {
+    if ($('#img_plat_selector')[0].files.length == 1 && $('#img_plat_selector')[0].files[0].size > 2 * 1024 * 1024) {
+        messageBox("La photo du plat est trop volumineuse (max 2 Mega octets)<br>");
+
+    } else {
+        ratio = $("#img_plat").width() / $("#img_plat").height();
+        if (ratio < (4 / 3)) {
+            messageBox("Veuillez utiliser une photo en mode paysage pour la photo du plat.");
+        }
+    }
+}
+
+function checkImageChefSize() {
+    if ($('#img_chef_selector')[0].files.length == 1 && $('#img_chef_selector')[0].files[0].size > 2 * 1024 * 1024) {
+        messageBox("La photo du chef est trop volumineuse (max 2 Mega octets)<br>");
+    }
+}
 
 $("document").ready(function () {
 
@@ -320,7 +416,7 @@ $("document").ready(function () {
     $(".first").click(function () {
         gotoPage(0);
     });
-    
+
     $(".last").click(function () {
         gotoPage(nbPage);
     });
@@ -339,8 +435,10 @@ $("document").ready(function () {
         $("#page2").hide();
         $("#txtPage2").show();
         $("#txtPage1").hide();
-        document.getElementById("img_plat").src = "img/plat.jpg";
-        document.getElementById("img_chef").src = "img/chef.jpg";
+        $("#img_plat").attr("src", "img/plat.jpg");
+        $("#img_chef").attr("src", "img/chef.jpg");
+        $("#img_plat_selector").val("");
+        $("#img_chef_selector").val("");        
 
         $("#fillForm").show();
     });
@@ -355,8 +453,11 @@ $("document").ready(function () {
         $("#edit_indications").val($("#recette_indications").text());
         $("#edit_nom").val($("#recette_nom").text());
         $("#edit_categorie").val($("#recette_categorie").text());
-        document.getElementById("img_plat").src = $("#recette_img_plat").attr('src');
-        document.getElementById("img_chef").src = $("#recette_img_chef").attr('src');
+        $("#img_plat").attr("src", $("#recette_img_plat").attr('src'));
+        $("#img_chef").attr("src", $("#recette_img_chef").attr('src'));
+        $("#img_plat_selector").val("");
+        $("#img_chef_selector").val("");   
+        checkEditRecetteChanges();
 
         $("#page1").show();
         $("#page2").hide();
@@ -366,7 +467,12 @@ $("document").ready(function () {
     });
 
     $("#cancel").click(function () {
-        $("#fillForm").hide();
+        if (isEditRecetteModified()) {
+            messageBox("En poursuivant vous allez perdre vos modifications.<br> Voulez-vous continuer ?", function () {
+                $("#fillForm").hide();
+            }, function () { });
+        }
+
     });
 
     $("#pageToggle").click(function () {
@@ -378,15 +484,7 @@ $("document").ready(function () {
     });
 
 
-    $("#validate").click(function () {
-        if (!checkRecette()) {
-            return;
-        }
 
-        uploadAll();
-
-        $("#fillForm").hide();
-    });
 
     $("#file_plat").click(function () {
         $("#img_plat_selector").trigger('click');
@@ -395,13 +493,32 @@ $("document").ready(function () {
         $("#img_chef_selector").trigger('click');
     });
 
-    $("#message_ok").click(function () {
-        $("#message").hide();
+
+
+
+    $("#img_plat_selector").change(function (evt) {
+        loadPhoto(evt, "img_plat");
+        checkEditRecetteChanges();
+    });
+    $("#img_chef_selector").change(function (evt) {
+        loadPhoto(evt, "img_chef");
+        checkEditRecetteChanges();
     });
 
-        
-    document.getElementById('img_plat_selector').addEventListener('change', function (evt) { loadPhoto(evt, "img_plat") }, false);
-    document.getElementById('img_chef_selector').addEventListener('change', function (evt) { loadPhoto(evt, "img_chef") }, false);
+    $("#edit_titre").keyup(checkEditRecetteChanges);
+    $("#edit_presentation").keyup(checkEditRecetteChanges);
+    $("#edit_ingredients").keyup(checkEditRecetteChanges);
+    $("#edit_preparation").keyup(checkEditRecetteChanges);
+    $("#edit_indications").keyup(checkEditRecetteChanges);
+    $("#edit_nom").keyup(checkEditRecetteChanges);
+    $("#edit_categorie").keyup(checkEditRecetteChanges);
+    $("#img_plat").on('load', checkEditRecetteChanges);
+    $("#img_plat").on('load', checkImagePlatRatio);
+    $("#img_chef").on('load', checkEditRecetteChanges);
+    $("#img_chef").on('load', checkImageChefSize);
+
+
+
 
 
     $(window).on('resize', function () {

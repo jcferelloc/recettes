@@ -160,7 +160,7 @@ function imageHTML($element){
     }
     
     
-    $html = "<img " . $name . " src=\"" . $url . "\" alt=\"Pas de photo.\" style=\"position:absolute; ".   $left . $top . $width ."\" onerror=\"this.src=''\">";
+    $html = "<img " . $name . " src=\"" . $url . "\" alt=\"Pas de photo.\" style=\"position:absolute; ".   $left . $top . $width ."\" onerror=\"if (handleImgError) handleImgError(this);\">";
 
     return $html;
 }

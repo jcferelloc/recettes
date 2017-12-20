@@ -8,7 +8,16 @@
     padding: 10px;
     display: inline-block;
 }
-
+.buttonUnactive {
+    cursor: default;
+    color: #FFF;
+    background-color: #666666;
+    border: none;
+    border-radius: 2px;
+    box-shadow: none;
+    padding: 10px;
+    display: inline-block;
+}
 .buttonCancel {
     cursor: pointer;
     color: #FFF;
@@ -108,5 +117,6 @@
     cursor:pointer;
 }
 .listIndex:hover{
-    border-bottom: solid 1px grey;
+    text-decoration: underline;
+    /*border-bottom: solid 1px grey;*/
 }
