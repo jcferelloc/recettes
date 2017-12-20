@@ -19,6 +19,7 @@ function pageHTML($model, $number){
     global  $formatSheet;
     
     $page = $model->{'pages'}[$number];
+    
 
     if ( $model->{'orientation'} == "L"){
         $width = $formatSheet[$model->{'format'}][1];
@@ -56,17 +57,20 @@ function pageHTML($model, $number){
 }
 
 function elementHTML($element){
+    //var_dump($element);
     switch ( $element->{'type'}){
         case "text":
         return textHTML($element);
         case "image":
         return imageHTML($element);
         case "property":
-        return properyHTML($element);
+        return propertyHTML($element);
+        case "list":
+        return listHTML($element);
     }
 }
 
-function properyHTML($element){
+function propertyHTML($element){
     $value="";
     $name="";
     if ( isset($element->{'name'})){
@@ -159,8 +163,85 @@ function imageHTML($element){
     $html = "<img " . $name . " src=\"" . $url . "\" alt=\"Pas de photo.\" style=\"position:absolute; ".   $left . $top . $width ."\" onerror=\"this.src=''\">";
 
     return $html;
-
-
 }
 
+function listHTML($element){
+    $fontsizeList="";
+    $topList=0;
+    $leftList=0;
+    $colorList="";
+    $heightList=0;
+    $alignList= " text-align:left; ";
+    $classList = "";
+
+    if ( isset($element->{'fontsize'})){
+        $fontsizeList =  " font-size:" . $element->{'fontsize'} ."pt; ";
+    }
+    if ( isset($element->{'top'})){
+        $topList = $element->{'top'};
+    }
+    if ( isset($element->{'left'})){
+        $leftList = $element->{'left'};
+    }
+    if ( isset($element->{'color'})){
+        $colorList = "color:" . $element->{'color'} ."; ";
+    }
+    if ( isset($element->{'height'})){
+        $heightList = $element->{'height'};
+    }
+    if ( isset($element->{'align'})){
+        $alignList =  " text-align:" . $element->{'align'} ."; ";
+    }
+    if ( isset($element->{'class'})){
+        $classList = " class=\"" . $element->{'class'} ."\" ";
+    }
+    $html ="";
+
+    foreach ($element->{'fields'} as $listElement){
+        $left = $leftList;
+        foreach($element->{'elements_fields'} as $displayField){
+            if ( isset($displayField->{'name'}) && isset($listElement->{$displayField->{'name'}})){
+                if ( isset($displayField->{'align'})){
+                    $align = " text-align:" . $displayField->{'align'} ."; ";
+                }else{
+                    $align = $alignList;
+                }
+                if ( isset($displayField->{'color'})){
+                    $color = "color:" . $displayField->{'color'} ."; ";
+                }else{
+                    $color = $colorList;
+                }
+                if ( isset($displayField->{'fontsize'})){
+                    $fontsize = "font-size:" . $displayField->{'fontsize'} ."pt; ";
+                }else{
+                    $fontsize = $fontsizeList;
+                }
+                if ( isset($displayField->{'width'})){
+                    $width = "width:" . $displayField->{'width'} ."mm; ";
+                }else{
+                    $width = "";
+                }
+                $attribute="";
+                if ( isset($displayField->{'attribute'}) && isset($listElement->{$displayField->{'attribute'}})){
+                    $attribute = " attribute=\"" . $listElement->{$displayField->{'attribute'}} ."\" ";
+                }
+
+                $top = " top:" . $topList ."mm; ";
+                $html .= "<div " . $classList . $attribute. " style=\"position:absolute; ".  $align . $color . $fontsize . $top .  $width . " left:" . $left ."mm; "."\">";
+                $html .= preg_replace("/\r\n/","<br>",$listElement->{$displayField->{'name'}});
+                $html .= "</div>";
+            }
+            if ( isset($displayField->{'width'})){
+                $left += $displayField->{'width'} ;
+            }
+        }
+        if ( isset($listElement->{'height'})){
+            $topList += $listElement->{'height'} ;
+        }else{
+            $topList += $heightList ;
+        }
+         
+    }
+    return $html;
+}
 ?>

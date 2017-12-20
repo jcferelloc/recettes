@@ -103,3 +103,10 @@
 .pageNumber:hover{
     border-bottom: solid 1px grey;
 }
+
+.listIndex{
+    cursor:pointer;
+}
+.listIndex:hover{
+    border-bottom: solid 1px grey;
+}

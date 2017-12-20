@@ -127,7 +127,7 @@ function replaceVars($model, $newPage, $section, $dataPage ){
 
 function replaceElementVars($model, $value, $section, $dataPage ){
 	if ( isset($value->{"type"}) && $value->{"type"}=="list" ){
-		return $value; //replaceListVars($model, $value);
+		replaceListVars($model, $value);
 	}
 
 	if ( gettype( $value ) == "string"){
@@ -162,6 +162,40 @@ function replaceElementVars($model, $value, $section, $dataPage ){
 		}
 		return $value;
 	}
+	return $value;
+}
+
+function replaceListVars($model, $value){
+	global $data;
+	
+
+	if ( isset($value->{"criteria"}) ){
+		$criteria = $value->{"criteria"};
+	}
+	if ( isset($value->{"criteria_value"}) ){
+		$criteria_value = $value->{"criteria_value"};
+	}
+	if ( isset($value->{"fields"})) {
+		$fields = $value->{"fields"};
+	}
+	$dataList = [];
+	foreach($data as $dataPage){
+		if ( $dataPage[$criteria] == $criteria_value ){
+			$dataField = new stdClass;
+			foreach($fields as $field){
+				if ( preg_match('/@(\w+)@(.+)/', $field, $vars) == 1 && count($vars)==3 && $vars[1] == "page"){
+					$dataField->{"page"} = "@numero_page@recette_id@" . $dataField->{$vars[2]};
+				}
+				else{
+					$v = $dataPage[$field];
+					$dataField->{$field} = $v;
+				}
+			}
+			
+			$dataList[]=$dataField;
+		}
+	}
+	$value->{"fields"} = $dataList;
 	return $value;
 }
 

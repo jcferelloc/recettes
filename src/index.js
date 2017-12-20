@@ -72,6 +72,10 @@ var loadPage = function (number, id) {
             $(".pageNumber").click(function () {
                 gotoPage(parseInt($(this).text()));
             });
+            $(".listIndex").click(function () {
+                gotoRecette(undefined, parseInt($(this).attr("attribute")));
+            });
+            
             if ($("#recette_id").text() != "") {
                 $("#modify").show();
             } else {
