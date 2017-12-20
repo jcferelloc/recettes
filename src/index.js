@@ -101,6 +101,7 @@ function uploadAll() {
 function checkRecette() {
     var recetteID = 0;
     var action = "none";
+    var idPhotos = (new Date).getTime() - 1513379407458;
 
     if ($("#edit_id").text() == "") {
         recetteID = (new Date).getTime() - 1513379407458;
@@ -187,9 +188,9 @@ function checkRecette() {
 
     sequenceID = -1;
     sequence = [
-        [uploadRecette, recetteID, action],
-        [uploadPhoto, "img_plat", recetteID],
-        [uploadPhoto, "img_chef", recetteID],
+        [uploadRecette, recetteID, idPhotos, action],
+        [uploadPhoto, "img_plat", recetteID + "_" + idPhotos],
+        [uploadPhoto, "img_chef", recetteID + "_" + idPhotos ],
         [loadModel],
         [gotoRecette, recetteID]
     ];
@@ -197,7 +198,7 @@ function checkRecette() {
     return true;
 }
 
-function uploadRecette(callBack, recetteID, action) {
+function uploadRecette(callBack, recetteID, idPhotos, action) {
 
     var postData = "action=" + action;
     postData += "&id=" + recetteID;
@@ -209,6 +210,7 @@ function uploadRecette(callBack, recetteID, action) {
     postData += "&preparation=" + $("#edit_preparation").val();
     postData += "&indications=" + $("#edit_indications").val();
     postData += "&categorie=" + $("#edit_categorie").val();
+    postData += "&idPhotos=" + idPhotos;
 
 
     $("#loading").toggle();
