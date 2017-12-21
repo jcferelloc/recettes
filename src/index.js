@@ -6,6 +6,10 @@ var mode = 2;
 var sequence = [];
 var sequenceID = 0;
 
+// Initialise resize library
+var resize = new window.resize();
+resize.init();
+
 var gotoPage = function (page) {
     currentPage = page;
     if (currentPage != 0 && currentPage != nbPage - 1 && mode == 2 && currentPage % 2 == 0) {
@@ -102,14 +106,15 @@ function uploadAll() {
         return;
     }
     sequenceID++;
-    sequence[sequenceID][0].call(undefined, uploadAll, sequence[sequenceID][1], sequence[sequenceID][2]);
+    sequence[sequenceID][0].call(undefined, uploadAll, sequence[sequenceID][1], sequence[sequenceID][2], sequence[sequenceID][3]);
 
 }
 
 function checkRecette() {
     var recetteID = 0;
     var action = "none";
-    var idPhotos = (new Date).getTime() - 1513379407458;
+    var idPhotoPlat = (new Date).getTime() - 1513379407458;
+    var idPhotoChef = (new Date).getTime() - 1513379407458;
 
     if ($("#edit_id").text() == "") {
         recetteID = (new Date).getTime() - 1513379407458;
@@ -162,33 +167,29 @@ function checkRecette() {
     }
 
 
-    sequenceID = -1;
-    sequence = [
-        [uploadRecette, recetteID, idPhotos, action]
-    ]
+
 
     message_text = "Votre recette a été sauvegardée. <br><br>";
-    upload_img_plat = true;
-    upload_img_chef = true;
+    upload_img_plat = false;
+    upload_img_chef = false;
 
-    if ($('#img_plat_selector')[0].files.length == 1 || $('#img_chef_selector')[0].files.length == 1) {
-        if ($('#img_plat_selector')[0].files.length == 1 && $('#img_plat_selector')[0].files[0].size > 2 * 1024 * 1024) {
-            message_text += "La photo du plat n'a pas été sauvegardée car elle est trop volumineuse (max 2 Mega octets)<br>";
-            //$("#img_plat").attr('src', "img/plat.jpg");
-            upload_img_plat = false;
+    if ($('#img_plat_selector')[0].files.length == 1) {
+
+        ratio = $("#img_plat").width() / $("#img_plat").height();
+        if (ratio < (4 / 3)) {
+            message_text += "La photo du plat n'a pas été sauvegardée car elle n'est pas en mode paysage.";
         } else {
-            ratio = $("#img_plat").width() / $("#img_plat").height();
-            if (ratio < (4 / 3)) {
-                message_text += "La photo du plat n'a pas été sauvegardée car elle n'est pas en mode paysage.";
-            }
+            upload_img_plat = true;
         }
-        if ($('#img_chef_selector')[0].files.length == 1 && $('#img_chef_selector')[0].files[0].size > 2 * 1024 * 1024) {
-            message_text += "La photo du chef n'a pas été sauvegardée car elle est trop volumineuse (max 2 Mega octets)<br>";
-            //$("#img_chef").attr('src', "img/chef.jpg");
-            upload_img_chef = false;
-        }
-
+    } else {
+        idPhotoPlat = "";
     }
+    if ($('#img_chef_selector')[0].files.length == 1) {
+        upload_img_chef = true;
+    } else {
+        idPhotoChef = "";
+    }
+
 
     if ($('#img_plat_selector')[0].files.length == 0 && $("#img_plat").attr('src') == "img/plat.jpg" &&
         $('#img_chef_selector')[0].files.length == 0 && $("#img_chef").attr('src') == "img/chef.jpg") {
@@ -200,11 +201,14 @@ function checkRecette() {
     }
 
     messageBox(message_text);
-
-    if (upload_img_plat) sequence.push( [uploadPhoto, "img_plat", recetteID + "_" + idPhotos] );
-    if (upload_img_chef) sequence.push( [uploadPhoto, "img_chef", recetteID + "_" + idPhotos] );
-    sequence.push( [loadModel] );
-    sequence.push( [gotoRecette, recetteID] );
+    sequenceID = -1;
+    sequence = [
+        [uploadRecette, recetteID, idPhotoPlat, idPhotoChef, action]
+    ]
+    if (upload_img_plat) sequence.push([uploadPhoto, "img_plat", recetteID + "_" + idPhotoPlat]);
+    if (upload_img_chef) sequence.push([uploadPhoto, "img_chef", recetteID + "_" + idPhotoChef]);
+    sequence.push([loadModel]);
+    sequence.push([gotoRecette, recetteID]);
 
 
     return true;
@@ -237,7 +241,7 @@ function messageBox(text, okCallBack, cancelCallBack) {
     $("#message").show();
 }
 
-function uploadRecette(callBack, recetteID, idPhotos, action) {
+function uploadRecette(callBack, recetteID, idPhotoPlat, idPhotoChef, action) {
 
     var postData = "action=" + action;
     postData += "&id=" + recetteID;
@@ -249,7 +253,8 @@ function uploadRecette(callBack, recetteID, idPhotos, action) {
     postData += "&preparation=" + $("#edit_preparation").val();
     postData += "&indications=" + $("#edit_indications").val();
     postData += "&categorie=" + $("#edit_categorie").val();
-    postData += "&idPhotos=" + idPhotos;
+    postData += "&idPhotoPlat=" + idPhotoPlat;
+    postData += "&idPhotoChef=" + idPhotoChef;
 
 
     $("#loading").toggle();
@@ -269,26 +274,29 @@ function uploadRecette(callBack, recetteID, idPhotos, action) {
 }
 
 function uploadPhoto(callBack, imgID, recetteID) {
-    data = new FormData();
-    data.append('name', imgID);
-    data.append('recetteID', recetteID);
-    data.append('file', $('#' + imgID + '_selector')[0].files[0]);
-    $.ajax({
-        url: "uploadPhoto.php", // Url to which the request is send
-        type: "POST",             // Type of request to be send, called as method
-        data: data, // Data sent to server, a set of key/value pairs (i.e. form fields and values)
-        contentType: false,       // The content type used when sending data to the server.
-        cache: false,             // To unable request pages to be cached
-        processData: false,        // To send DOMDocument or non processed data file it is set to false
-        success: function (data)   // A function to be called if request succeeds
-        {
-            console.log(data);
-        },
-        complete: function () {
-            if (callBack != null) {
-                callBack.call();
+
+    resize.photo($('#' + imgID + '_selector')[0].files[0], 1600, 'file', function (resizedFile) {
+        data = new FormData();
+        data.append('name', imgID);
+        data.append('recetteID', recetteID);
+        data.append('file', resizedFile);
+        $.ajax({
+            url: "uploadPhoto.php", // Url to which the request is send
+            type: "POST",             // Type of request to be send, called as method
+            data: data, // Data sent to server, a set of key/value pairs (i.e. form fields and values)
+            contentType: false,       // The content type used when sending data to the server.
+            cache: false,             // To unable request pages to be cached
+            processData: false,        // To send DOMDocument or non processed data file it is set to false
+            success: function (data)   // A function to be called if request succeeds
+            {
+                console.log(data);
+            },
+            complete: function () {
+                if (callBack != null) {
+                    callBack.call();
+                }
             }
-        }
+        });
     });
 }
 
@@ -355,6 +363,7 @@ function checkEditRecetteChanges() {
     if (isEditRecetteModified()) {
         $("#validate").removeClass("buttonUnactive");
         $("#validate").addClass("button");
+        $("#validate").unbind("click");
         $("#validate").click(function () {
             if (!checkRecette()) {
                 return;
@@ -372,22 +381,14 @@ function checkEditRecetteChanges() {
 }
 
 function checkImagePlatRatio() {
-    if ($('#img_plat_selector')[0].files.length == 1 && $('#img_plat_selector')[0].files[0].size > 2 * 1024 * 1024) {
-        messageBox("La photo du plat est trop volumineuse (max 2 Mega octets)<br>");
 
-    } else {
-        ratio = $("#img_plat").width() / $("#img_plat").height();
-        if (ratio < (4 / 3)) {
-            messageBox("Veuillez utiliser une photo en mode paysage pour la photo du plat.");
-        }
+    ratio = $("#img_plat").width() / $("#img_plat").height();
+    if (ratio < (4 / 3)) {
+        messageBox("Veuillez utiliser une photo en mode paysage pour la photo du plat.");
     }
+
 }
 
-function checkImageChefSize() {
-    if ($('#img_chef_selector')[0].files.length == 1 && $('#img_chef_selector')[0].files[0].size > 2 * 1024 * 1024) {
-        messageBox("La photo du chef est trop volumineuse (max 2 Mega octets)<br>");
-    }
-}
 
 $("document").ready(function () {
 
@@ -438,7 +439,7 @@ $("document").ready(function () {
         $("#img_plat").attr("src", "img/plat.jpg");
         $("#img_chef").attr("src", "img/chef.jpg");
         $("#img_plat_selector").val("");
-        $("#img_chef_selector").val("");        
+        $("#img_chef_selector").val("");
 
         $("#fillForm").show();
     });
@@ -456,7 +457,7 @@ $("document").ready(function () {
         $("#img_plat").attr("src", $("#recette_img_plat").attr('src'));
         $("#img_chef").attr("src", $("#recette_img_chef").attr('src'));
         $("#img_plat_selector").val("");
-        $("#img_chef_selector").val("");   
+        $("#img_chef_selector").val("");
         checkEditRecetteChanges();
 
         $("#page1").show();
@@ -515,7 +516,7 @@ $("document").ready(function () {
     $("#img_plat").on('load', checkEditRecetteChanges);
     $("#img_plat").on('load', checkImagePlatRatio);
     $("#img_chef").on('load', checkEditRecetteChanges);
-    $("#img_chef").on('load', checkImageChefSize);
+    $("#img_chef").on('load', checkEditRecetteChanges);
 
 
 

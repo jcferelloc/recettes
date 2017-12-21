@@ -25,7 +25,8 @@ if ( $action != "delete"){
     $ingredients = textTreatment($params["ingredients"]);
     $preparation = textTreatment($params["preparation"]);
     $indications = textTreatment($params["indications"]);
-    $idPhotos = htmlspecialchars($params["idPhotos"]);
+    $idPhotoPlat = htmlspecialchars($params["idPhotoPlat"]);
+    $idPhotoChef = htmlspecialchars($params["idPhotoChef"]);
 }
 
 
@@ -44,8 +45,8 @@ if ( $action == "new" ){
     $query .= "'" . $ingredients . "', ";
     $query .= "'" . $preparation . "', ";
     $query .= "'" . $indications . "',";
-    $query .= "'upload/plat_" . $id . "_" . $idPhotos. ".jpg',";
-    $query .= "'upload/chef_" . $id . "_" . $idPhotos. ".jpg'";
+    if ( $idPhotoPlat != "" ) $query .= "'upload/plat_" . $id . "_" . $idPhotoPlat. ".jpg',";
+    if ( $idPhotoChef != "" ) $query .= "'upload/chef_" . $id . "_" . $idPhotoChef. ".jpg'";
     $query .= ");" ;
 
     $result = $connection->query( $query );
@@ -64,8 +65,8 @@ if ( $action == "new" ){
     $query .= "ingredients = '" . $ingredients . "', ";
     $query .= "preparation = '" . $preparation . "', ";
     $query .= "indications = '" . $indications  . "', ";
-    $query .= "url_plat = " . "'upload/plat_" . $id . "_" . $idPhotos. ".jpg',";
-    $query .= "url_chef = " . "'upload/chef_" . $id . "_" . $idPhotos. ".jpg'";
+    if ( $idPhotoPlat != "" ) $query .= "url_plat = " . "'upload/plat_" . $id . "_" . $idPhotoPlat. ".jpg',";
+    if ( $idPhotoChef != "" ) $query .= "url_chef = " . "'upload/chef_" . $id . "_" . $idPhotoChef. ".jpg'";
     $query .= "WHERE id = " . $id . ";";
 var_dump($query);
     $result = $connection->query( $query );
