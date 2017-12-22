@@ -8,7 +8,7 @@ include "formatSheet.php";
 
 $start = 0;
 if (isset($_GET["start"])){
-    $nb = htmlspecialchars($_GET["start"]);
+    $start = htmlspecialchars($_GET["start"]);
 }
 
 $nb = 0;
@@ -73,6 +73,8 @@ function elementPDF($element){
         return textPDF($element);
         case "image":
         return imagePDF($element);
+        case "list" :
+        return listPDF($element);
     }
 }
 
@@ -161,6 +163,102 @@ function imagePDF($element){
 
     
 }
+function listPDF($element){
+    global $pdf;
+    $fontsizeList="";
+    $topList=0;
+    $leftList=0;
+    $colorList="";
+    $heightList=0;
+    $alignList= " text-align:left; ";
+    $classList = "";
+    $height = 0;
+
+    if ( isset($element->{'fontsize'})){
+        $fontsizeList =  $element->{'fontsize'};
+    }
+    if ( isset($element->{'top'})){
+        $topList = $element->{'top'};
+    }
+    if ( isset($element->{'left'})){
+        $leftList = $element->{'left'};
+    }
+    if ( isset($element->{'color'})){
+        $colorList = $element->{'color'} ;
+    }
+    if ( isset($element->{'height'})){
+        $heightList = $element->{'height'};
+    }
+    if ( isset($element->{'align'})){
+        $alignList =  $element->{'align'};
+    }
+   
+
+    foreach ($element->{'fields'} as $listElement){
+        $left = $leftList;
+        foreach($element->{'elements_fields'} as $displayField){
+            if ( isset($displayField->{'name'}) && isset($listElement->{$displayField->{'name'}})){
+               
+                if ( isset($displayField->{'color'})){
+                    $color = $displayField->{'color'};
+                }else{
+                    $color = $colorList;
+                }
+                if ( isset($displayField->{'fontsize'})){
+                    $fontsize = $displayField->{'fontsize'} ;
+                }else{
+                    $fontsize = $fontsizeList;
+                }
+                if ( isset($displayField->{'width'})){
+                    $width = $displayField->{'width'};
+                }else{
+                    $width = "";
+                }
+                if ( isset($listElement->{'height'})){
+                    $height = $listElement->{'height'} ;
+                }else{
+                    $height = $heightList ;
+                }
+                
+                if ( isset($displayField->{'align'})){
+                    $align = $displayField->{'align'};
+                }else{
+                    $align = $alignList;
+                }
+                switch ($align) {
+                    case "right" :
+                    $align ="R";
+                    break;
+                case "left" :
+                    $align ="L";
+                    break;
+                case "center" :
+                    $align ="C";
+                    break;
+                }
+
+                $pdf->SetXY($left, $topList);
+                $pdf->SetFontSize($fontsize);
+                $rgb = toRGB($color);
+                $pdf->SetTextColor($rgb[0],$rgb[1],$rgb[2]);
+                
+                //echo $width .", ". $height .", ".utf8_decode($listElement->{$displayField->{'name'}}) .", ". $align ."<br>";
+                $pdf->MultiCell($width,  $height , utf8_decode($listElement->{$displayField->{'name'}}), 0, $align);
+
+            }
+            if ( isset($displayField->{'width'})){
+                $left += $displayField->{'width'} ;
+            }
+        }
+        if ( isset($listElement->{'height'})){
+            $topList += $listElement->{'height'} ;
+        }else{
+            $topList += $heightList ;
+        }
+         
+    }
+}
+
 function toRGB ($hex){
     list($r, $g, $b) = sscanf($hex, "#%02x%02x%02x");
     return array( $r, $g, $b);

@@ -44,9 +44,9 @@ if ( $action == "new" ){
     $query .= "'" . $presentation . "', ";
     $query .= "'" . $ingredients . "', ";
     $query .= "'" . $preparation . "', ";
-    $query .= "'" . $indications . "',";
-    if ( $idPhotoPlat != "" ) $query .= "'upload/plat_" . $id . "_" . $idPhotoPlat. ".jpg',";
-    if ( $idPhotoChef != "" ) $query .= "'upload/chef_" . $id . "_" . $idPhotoChef. ".jpg'";
+    $query .= "'" . $indications . "'";
+    if ( $idPhotoPlat != "" ) $query .= ", 'upload/plat_" . $id . "_" . $idPhotoPlat. ".jpg'";
+    if ( $idPhotoChef != "" ) $query .= ", 'upload/chef_" . $id . "_" . $idPhotoChef. ".jpg'";
     $query .= ");" ;
 
     $result = $connection->query( $query );
@@ -64,9 +64,9 @@ if ( $action == "new" ){
     $query .= "presentation = '" . $presentation . "', ";
     $query .= "ingredients = '" . $ingredients . "', ";
     $query .= "preparation = '" . $preparation . "', ";
-    $query .= "indications = '" . $indications  . "', ";
-    if ( $idPhotoPlat != "" ) $query .= "url_plat = " . "'upload/plat_" . $id . "_" . $idPhotoPlat. ".jpg',";
-    if ( $idPhotoChef != "" ) $query .= "url_chef = " . "'upload/chef_" . $id . "_" . $idPhotoChef. ".jpg'";
+    $query .= "indications = '" . $indications  . "' ";
+    if ( $idPhotoPlat != "" ) $query .= ", url_plat = " . "'upload/plat_" . $id . "_" . $idPhotoPlat. ".jpg'";
+    if ( $idPhotoChef != "" ) $query .= ", url_chef = " . "'upload/chef_" . $id . "_" . $idPhotoChef. ".jpg'";
     $query .= "WHERE id = " . $id . ";";
 var_dump($query);
     $result = $connection->query( $query );

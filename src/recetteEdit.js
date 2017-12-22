@@ -1,101 +1,10 @@
-var currentPage = 0;
-var model;
-var nbPage = 0;
-var mode = 2;
-
 var sequence = [];
 var sequenceID = 0;
+var loggedIn = false;
 
 // Initialise resize library
 var resize = new window.resize();
 resize.init();
-
-var gotoPage = function (page) {
-    currentPage = page;
-    if (currentPage != 0 && currentPage != nbPage - 1 && mode == 2 && currentPage % 2 == 0) {
-        currentPage -= 1;
-    }
-    if (currentPage == 0 || (mode == 1 && currentPage % 2 == 0)) {
-
-        $("#double").hide();
-        $("#gauche").hide();
-
-        $("#droite").show();
-
-        loadPage(currentPage, "droiteContent");
-    }
-    else if (currentPage == nbPage - 1 || mode == 1 && currentPage % 2 == 1) {
-        $("#droite").hide();
-        $("#double").hide();
-
-        $("#gauche").show();
-
-        loadPage(currentPage, "gaucheContent");
-    }
-    else if (mode == 2) {
-        $("#droite").hide();
-        $("#gauche").hide();
-
-        $("#double").show();
-
-        loadPage(currentPage, "doubleGaucheContent");
-        loadPage(currentPage + 1, "doubleDroiteContent");
-    }
-}
-
-function gotoRecette(callBack, recetteID) {
-    for (idxPage = 0; idxPage < model.length; idxPage++) {
-        if (model[idxPage].recette_id == recetteID) {
-            gotoPage(idxPage);
-        }
-    }
-}
-
-var calcZoom = function () {
-    var w = 210;
-    var h = 149;
-    if (mode == 2) {
-        w *= 2;
-    }
-    var bodyWidth = ($('#backgroundBook').width() - 140) * 0.264583333333334;
-    var bodyHeight = ($('#backgroundBook').height() - 20) * 0.264583333333334;
-    var zoom = "" + Math.min(bodyWidth / w, bodyHeight / h) * 100 + "%";
-    console.log("zoom:" + zoom);
-    $("#double").css({ zoom: zoom });
-    $("#gauche").css({ zoom: zoom });
-    $("#droite").css({ zoom: zoom });
-}
-
-var loadPage = function (number, id) {
-    $("#" + id).html("");
-    $.ajax({
-        method: "GET",
-        url: "page.php?format=html&number=" + number + "&" + Math.random(),
-        success: function (data) {
-            $("#" + id).html(data);
-            $(".pageNumber").click(function () {
-                gotoPage(parseInt($(this).text()));
-            });
-            $(".listIndex").click(function () {
-                gotoRecette(undefined, parseInt($(this).attr("attribute")));
-            });
-            if ($("#recette_id").text() != "") {
-                $("#modify").show();
-            } else {
-                $("#modify").hide();
-            }
-        }
-    });
-};
-
-function handleImgError(img) {
-    if ($(img).attr("id") == "recette_img_plat") {
-        $("#recette_img_plat").attr('src', 'img/plat.jpg');
-    }
-    if ($(img).attr("id") == "recette_img_chef") {
-        $("#recette_img_chef").attr('src', 'img/chef.jpg');
-    };
-}
 
 function uploadAll() {
     if (sequenceID == -1) {
@@ -107,7 +16,6 @@ function uploadAll() {
     }
     sequenceID++;
     sequence[sequenceID][0].call(undefined, uploadAll, sequence[sequenceID][1], sequence[sequenceID][2], sequence[sequenceID][3]);
-
 }
 
 function checkRecette() {
@@ -321,43 +229,25 @@ function loadPhoto(evt, imgID) {
     }
 }
 
-function loadModel(callBack) {
-    $.ajax({
-        method: "GET",
-        url: "page.php?summary&" + Math.random(),
-        success: function (data) {
-            model = JSON.parse(data);
-            nbPage = model.length;
-
-        },
-        complete: function () {
-            if (callBack != null) {
-                callBack.call();
-            }
-        }
-    });
-}
 
 function isEditRecetteModified() {
-    if ($("#edit_id").text() != $("#recette_id").text() ||
-        $("#edit_userID").text() != $("#recette_userID").text() ||
-        $("#edit_titre").val() != $("#recette_titre").text() ||
-        $("#edit_presentation").val() != $("#recette_presentation").text() ||
-        $("#edit_ingredients").val() != $("#recette_ingredients").text() ||
-        $("#edit_preparation").val() != $("#recette_preparation").text() ||
-        $("#edit_indications").val() != $("#recette_indications").text() ||
-        $("#edit_nom").val() != $("#recette_nom").text() ||
-        $("#edit_categorie").val() != $("#recette_categorie").text() ||
-        $("#img_plat").attr("src") != $("#recette_img_plat").attr('src') ||
-        $("#img_chef").attr("src") != $("#recette_img_chef").attr('src')
+    if ($("#edit_id").text() != $("#current_recette_id").text() ||
+        $("#edit_userID").text() != $("#current_recette_userID").text() ||
+        $("#edit_titre").val() != $("#current_recette_titre").text() ||
+        $("#edit_presentation").val() != $("#current_recette_presentation").text() ||
+        $("#edit_ingredients").val() != $("#current_recette_ingredients").text() ||
+        $("#edit_preparation").val() != $("#current_recette_preparation").text() ||
+        $("#edit_indications").val() != $("#current_recette_indications").text() ||
+        $("#edit_nom").val() != $("#current_recette_nom").text() ||
+        $("#edit_categorie").val() != $("#current_recette_categorie").text() ||
+        $("#img_plat").attr("src") != $("#current_recette_img_plat").attr('src') ||
+        $("#img_chef").attr("src") != $("#current_recette_img_chef").attr('src')
     ) {
         return true;
     }
     return false;
 }
 
-// START
-loadModel();
 
 function checkEditRecetteChanges() {
     if (isEditRecetteModified()) {
@@ -381,48 +271,31 @@ function checkEditRecetteChanges() {
 }
 
 function checkImagePlatRatio() {
-
     ratio = $("#img_plat").width() / $("#img_plat").height();
     if (ratio < (4 / 3)) {
         messageBox("Veuillez utiliser une photo en mode paysage pour la photo du plat.");
     }
-
 }
 
+function checkLoggedIn() {
+    if (!loggedIn) {
+        var text = prompt("Veuillez entrer le mot de passe");
+        if (text != null) {
+            if (text == "123") {
+                loggedIn = true;
+            } else {
+                alert("Mauvais mot de passe.");
+            }
+        }
+    }
+    return loggedIn;
+}
 
-$("document").ready(function () {
-
-    $(".next").click(function () {
-        if (currentPage >= nbPage - 1) {
+$(document).ready(function () {
+    $("#create").click(function () {
+        if (!checkLoggedIn()) {
             return;
         }
-        if (currentPage == 0 || mode == 1) {
-            currentPage++;
-        } else {
-            currentPage += 2;
-        }
-        gotoPage(currentPage);
-    });
-    $(".prev").click(function () {
-        if (currentPage > 0) {
-            if (currentPage == 1 || mode == 1) {
-                currentPage--;
-            } else {
-                currentPage -= 2;
-            }
-            gotoPage(currentPage);
-        }
-    });
-
-    $(".first").click(function () {
-        gotoPage(0);
-    });
-
-    $(".last").click(function () {
-        gotoPage(nbPage);
-    });
-
-    $("#create").click(function () {
         $("#edit_id").text("");
         $("#edit_userID").text(0);
         $("#edit_titre").val("");
@@ -445,17 +318,20 @@ $("document").ready(function () {
     });
 
     $("#modify").click(function () {
-        $("#edit_id").text($("#recette_id").text());
-        $("#edit_userID").text($("#recette_userID").text());
-        $("#edit_titre").val($("#recette_titre").text());
-        $("#edit_presentation").val($("#recette_presentation").text());
-        $("#edit_ingredients").val($("#recette_ingredients").text());
-        $("#edit_preparation").val($("#recette_preparation").text());
-        $("#edit_indications").val($("#recette_indications").text());
-        $("#edit_nom").val($("#recette_nom").text());
-        $("#edit_categorie").val($("#recette_categorie").text());
-        $("#img_plat").attr("src", $("#recette_img_plat").attr('src'));
-        $("#img_chef").attr("src", $("#recette_img_chef").attr('src'));
+        if (!checkLoggedIn()) {
+            return;
+        }
+        $("#edit_id").text($("#current_recette_id").text());
+        $("#edit_userID").text($("#current_recette_userID").text());
+        $("#edit_titre").val($("#current_recette_titre").text());
+        $("#edit_presentation").val($("#current_recette_presentation").text());
+        $("#edit_ingredients").val($("#current_recette_ingredients").text());
+        $("#edit_preparation").val($("#current_recette_preparation").text());
+        $("#edit_indications").val($("#current_recette_indications").text());
+        $("#edit_nom").val($("#current_recette_nom").text());
+        $("#edit_categorie").val($("#current_recette_categorie").text());
+        $("#img_plat").attr("src", $("#current_recette_img_plat").attr('src'));
+        $("#img_chef").attr("src", $("#current_recette_img_chef").attr('src'));
         $("#img_plat_selector").val("");
         $("#img_chef_selector").val("");
         checkEditRecetteChanges();
@@ -472,20 +348,11 @@ $("document").ready(function () {
             messageBox("En poursuivant vous allez perdre vos modifications.<br> Voulez-vous continuer ?", function () {
                 $("#fillForm").hide();
             }, function () { });
+        } else {
+            $("#fillForm").hide();
         }
 
     });
-
-    $("#pageToggle").click(function () {
-        $("#page1").toggle();
-        $("#page2").toggle();
-        $("#txtPage2").toggle();
-        $("#txtPage1").toggle();
-
-    });
-
-
-
 
     $("#file_plat").click(function () {
         $("#img_plat_selector").trigger('click');
@@ -493,9 +360,6 @@ $("document").ready(function () {
     $("#file_chef").click(function () {
         $("#img_chef_selector").trigger('click');
     });
-
-
-
 
     $("#img_plat_selector").change(function (evt) {
         loadPhoto(evt, "img_plat");
@@ -518,13 +382,4 @@ $("document").ready(function () {
     $("#img_chef").on('load', checkEditRecetteChanges);
     $("#img_chef").on('load', checkEditRecetteChanges);
 
-
-
-
-
-    $(window).on('resize', function () {
-        calcZoom();
-    })
-    calcZoom();
-    gotoPage(0);
 });

@@ -6,6 +6,36 @@ require "modelExpander.php";
 $model = getExpandedModel("modeles/modelExample.book");
 //var_dump($model);
 
+function getModelJS($model){
+    $modelJS ="";
+    $idxPage=0;
+    $modelJS .= '[';
+    foreach ($model->{"pages"} as $page){
+        $modelJS .=  " { ";
+        if ( isset($page->{"elements"})){
+            $idxElement=0;
+            foreach ($page->{"elements"} as $element ){
+                if ( $element->{'type'} == "property"){
+                    if ( $idxElement != 0){
+                        $modelJS .=  ",";
+                    }
+                    $modelJS .=  "\"" . $element->{'name'} ."\":" ."\"" . $element->{'value'} ."\"";
+                    
+                }
+                $idxElement++;
+            }
+        }
+        $modelJS .=  "}"; 
+        if ( $idxPage != count($model->{"pages"})-1 ){
+            $modelJS .=  ",";
+        }
+        $idxPage++;
+    }
+    $modelJS .=  ']';
+
+    return $modelJS;
+}
+
 if (isset($_GET["nbPage"])){
     echo count($model->{"pages"});
 }if (isset($_GET["summary"])){
@@ -35,11 +65,26 @@ if (isset($_GET["nbPage"])){
     echo ']';
     count($model->{"pages"});
 } else {
-    $number = htmlspecialchars($_GET["number"]);
-    $format = htmlspecialchars($_GET["format"]);
-    if ($format == "html"){
+
+    if ( isset($_GET["number"])){
+        $number = htmlspecialchars($_GET["number"]);
         echo pageHTML($model, $number);
-    } 
+    } else {
+        $idxPage=0;
+       
+        foreach ($model->{"pages"} as $page){
+            echo "<div id='modelPage".$idxPage."' style='display:none'>";
+            echo pageHTML($model, $idxPage);
+            echo "</div>";
+            $idxPage++;
+        }
+        echo "<script>";
+        echo "model=" . getmodelJS($model);
+        echo "</script>";
+         
+
+    }
+
 }
 
 ?>
