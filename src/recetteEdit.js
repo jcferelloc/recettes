@@ -231,21 +231,25 @@ function loadPhoto(evt, imgID) {
 
 
 function isEditRecetteModified() {
-    if ($("#edit_id").text() != $("#current_recette_id").text() ||
-        $("#edit_userID").text() != $("#current_recette_userID").text() ||
-        $("#edit_titre").val() != $("#current_recette_titre").text() ||
-        $("#edit_presentation").val() != $("#current_recette_presentation").text() ||
-        $("#edit_ingredients").val() != $("#current_recette_ingredients").text() ||
-        $("#edit_preparation").val() != $("#current_recette_preparation").text() ||
-        $("#edit_indications").val() != $("#current_recette_indications").text() ||
-        $("#edit_nom").val() != $("#current_recette_nom").text() ||
-        $("#edit_categorie").val() != $("#current_recette_categorie").text() ||
-        $("#img_plat").attr("src") != $("#current_recette_img_plat").attr('src') ||
-        $("#img_chef").attr("src") != $("#current_recette_img_chef").attr('src')
-    ) {
-        return true;
+    if ($("#edit_id").text() != "") {
+        return ($("#edit_titre").val() != $("#current_recette_titre").text() ||
+            $("#edit_presentation").val() != $("#current_recette_presentation").text() ||
+            $("#edit_ingredients").val() != $("#current_recette_ingredients").text() ||
+            $("#edit_preparation").val() != $("#current_recette_preparation").text() ||
+            $("#edit_indications").val() != $("#current_recette_indications").text() ||
+            $("#edit_nom").val() != $("#current_recette_nom").text() ||
+            $("#edit_categorie").val() != $("#current_recette_categorie").text() ||
+            $("#img_plat").attr("src") != $("#current_recette_img_plat").attr('src') ||
+            $("#img_chef").attr("src") != $("#current_recette_img_chef").attr('src'));
+    } else {
+        return ($("#edit_titre").val() != "" ||
+            $("#edit_presentation").val() != "" ||
+            $("#edit_ingredients").val() != "" ||
+            $("#edit_preparation").val() != "" ||
+            $("#edit_indications").val() != "" ||
+            $("#edit_nom").val() != "" ||
+            $("#edit_categorie").val() != -1);
     }
-    return false;
 }
 
 
