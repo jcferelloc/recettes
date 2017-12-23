@@ -7,6 +7,12 @@ var mode = 2;
 
 var gotoPage = function (page) {
     currentPage = page;
+    
+    $("#droiteContent").html("");
+    $("#gaucheContent").html("");
+    $("#doubleGaucheContent").html("");
+    $("#doubleDroiteContent").html("");
+
     if (currentPage != 0 && currentPage != nbPage - 1 && mode == 2 && currentPage % 2 == 0) {
         currentPage -= 1;
     }

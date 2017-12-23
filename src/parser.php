@@ -131,7 +131,7 @@ function textHTML($element){
     
     $html = "<div " . $class . $name . " style=\"position:absolute; ".  $align. $left . $top . $width . $fontsize . $color ."\">";
     
-    $html .= preg_replace("/\r\n/","<br>",$value);
+    $html .= str_replace (array("\r\n", "\n", "\r"),"<br>",$value);
     $html .= "</div>";
     return $html;
 }
