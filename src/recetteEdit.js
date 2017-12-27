@@ -1,6 +1,5 @@
 var sequence = [];
 var sequenceID = 0;
-var loggedIn = false;
 
 // Initialise resize library
 var resize = new window.resize();
@@ -281,27 +280,10 @@ function checkImagePlatRatio() {
     }
 }
 
-function checkLoggedIn() {
-    if (!loggedIn) {
-        var text = prompt("Veuillez entrer le mot de passe");
-        if (text != null) {
-            if (text == "123") {
-                loggedIn = true;
-            } else {
-                alert("Mauvais mot de passe.");
-            }
-        }
-    }
-    return loggedIn;
-}
-
 $(document).ready(function () {
     $("#create").click(function () {
-        if (!checkLoggedIn()) {
-            return;
-        }
         $("#edit_id").text("");
-        $("#edit_userID").text(0);
+        $("#edit_userID").text(userData.userID);
         $("#edit_titre").val("");
         $("#edit_presentation").val("");
         $("#edit_ingredients").val("");
@@ -319,12 +301,10 @@ $(document).ready(function () {
         $("#img_chef_selector").val("");
 
         $("#fillForm").show();
+        closeUserForm();
     });
 
     $("#modify").click(function () {
-        if (!checkLoggedIn()) {
-            return;
-        }
         $("#edit_id").text($("#current_recette_id").text());
         $("#edit_userID").text($("#current_recette_userID").text());
         $("#edit_titre").val($("#current_recette_titre").text());
@@ -385,5 +365,7 @@ $(document).ready(function () {
     $("#img_plat").on('load', checkImagePlatRatio);
     $("#img_chef").on('load', checkEditRecetteChanges);
     $("#img_chef").on('load', checkEditRecetteChanges);
+
+    
 
 });

@@ -5,35 +5,38 @@ if (sizeof($_POST)==0){
 }
 
 $login = htmlspecialchars($params["login"]);
-$password = htmlspecialchars($params["password"]);
+$passwordRow = htmlspecialchars($params["password"]);
+$password = substr($passwordRow,4,4) . "-" . substr($passwordRow,2,2) . "-" . substr($passwordRow,0,2);
 
 include 'connect.php';
 $connection = connect();
+$return = new stdClass;
+$return->{'status'}=false;
 
 
-$query = "SELECT pwd FROM `". getTable("members") ."` WHERE id='".$login."' ";
+$query = "SELECT * FROM `". getTable("users") ."` WHERE login='".$login."' ";
 
-$result = mysql_query( $query );
+$result = $connection->query( $query );
 
 $pwdChecked=false;
 
-while($row =mysql_fetch_assoc($result))
+while($row = $result->fetch_assoc())
 {
 	if ( count($row) == 0 ){
 		continue;
 	}
-	if ( $password == $row["pwd"] ){
+	if ( $password == $row["date_1"] ){
 		$pwdChecked = true ;
+		break;
 	}
 }
 
 if ( $pwdChecked ){
-	setcookie( "MEMBERID", $login, time()+86400*320 );
-	setcookie( "KOIJKLP", md5($password), time()+86400*320 );
-	echo "Ok! " ;
-}else{
-	setcookie("MEMBERID", "", time()-3600);
-	echo "bouh!";
+	$return->{'status'}=true;
+	foreach($row as $key => $value){
+		$return->{$key}=$value;
+	}
 }
+echo json_encode($return);
 
 ?> 

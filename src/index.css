@@ -94,8 +94,8 @@
 }
 
 .dropzone {
-    border: 2px dashed #bbb;
-    border-radius: 5px;
+    /*border: 2px dashed #bbb;
+    border-radius: 5px;*/
     padding: 2mm;
     text-align: center;
     font-size: 12pt;
@@ -119,4 +119,103 @@
 .listIndex:hover{
     text-decoration: underline;
     /*border-bottom: solid 1px grey;*/
+}
+
+/* **************************************************** */
+#loginform
+{
+    /*position:absolute;
+    width:350px;
+ height:0px;
+ margin:auto;
+ background-color:#E6E6E6;
+ border-radius:3px;
+ box-shadow:0px 0px 10px 0px #424242;
+ padding:10px;
+ box-sizing:border-box;
+ display:none;*/
+}
+.innerForm{
+ padding:10px;
+ margin-top:10px;
+ background-color:#FFFFFF;
+ border-radius:3px;
+ box-shadow:0px 0px 10px 2px #424242 inset;
+ position:absolute;
+ top:30px;
+ bottom:10px;
+ left:10px;
+ right:10px;
+ color:black;
+ cursor:default;
+}
+
+#loginform p
+{
+ margin-top:10px;
+ font-size:12px;
+ color:#585858;
+}
+#loginform #login
+{
+ width:150px;
+ height:30px;
+ border:2px solid #585858;
+ border-radius:3px;
+ padding:5px;
+ margin-left:25px;
+}
+#loginform #password
+{
+ margin-top:5px;
+ width:150px;
+ height:30px;
+ border:2px solid #E6E6E6;
+ border-radius:3px;
+ padding:5px;
+ margin-left:25px;
+}
+#loginform #dologin
+{
+ margin-top:20px;
+ margin-left:25px;
+ width:162px;
+ height:40px;
+ border:none;
+ border-radius:3px;
+ color:#000000;
+ background-color:#93d0fc;
+ box-shadow: inset 0 1px 0 #d3eafa;
+ font-size:12px;
+ cursor:pointer;
+}
+
+#loginform #dologin:hover
+{
+    font-weight: bold;
+}
+
+#userform
+{
+    color:black;
+}
+
+.userRecette{
+    cursor: pointer;
+    margin:5px;
+    padding: 3px;
+}
+.userRecette:hover{
+background-color: #07c;
+border-radius:3px;
+}
+
+.imageZoneText{
+    display: inline-block; 
+    vertical-align: middle; 
+    line-height: 14px;
+    background-color:black;
+    color:white;
+    padding:5px; 
+    border-radius:3px;
 }

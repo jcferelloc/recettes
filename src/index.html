@@ -12,8 +12,8 @@
     <link rel="apple-touch-icon" sizes="72x72" href="img/toque-72.png" />
     <link rel="apple-touch-icon" sizes="114x114" href="img/toque-114.png" />
 
-    <link rel="stylesheet" type="text/css" href="index.css"  /> 
-    
+    <link rel="stylesheet" type="text/css" href="index.css" />
+
     <style>
         @font-face {
             font-family: latoLight;
@@ -24,18 +24,15 @@
     <script src="lib/jquery-3.2.1.min.js"></script>
     <script src="lib/canvas-to-blob.min.js"></script>
     <script src="lib/resize.js"></script>
+    <script src="users.js"></script>
     <script src="displayBook.js"></script>
     <script src="recetteEdit.js"></script>
-    
+
 
 </head>
 
 <body style="font-family: Arial; font-size:12px;">
     <div id="topBar" style="padding:10px; font-size: 20px;top:0px; left:0px; right:0px;  text-align:center; ">Livre de recettes - APE Le Drennec 2018</div>
-
-    <div id="create" class="button" style="position: absolute; top:10px; left:10px;"> Créer une recette </div>
-    <div id="modify" class="button" style="display:none;position: absolute; top:10px; left:130px;"> Modifier la recette </div>
-
 
     <div id="backgroundBook" style="position:absolute;padding:20px; top:50px; left:0px; right:0px; bottom:0px; ">
 
@@ -88,37 +85,38 @@
             <div id="page1">
                 <div style="display:none;" id="edit_id"></div>
                 <div style="display:none;" id="edit_userID"></div>
-                <div style="position:absolute; text-align:center; left:0mm; top:10mm; width:210mm; font-size:30pt; color:#FAFAFA; ">Titre</div>
                 <input id="edit_titre" style="position:absolute; text-align:center; left:1mm; top:10mm; width:208mm; font-size:30pt; color:#D2691E; "
-                    class="fillArea">
+                    class="fillArea" placeholder="Titre de la recette">
                 <div style="position:absolute; text-align:left; left:10mm; top:25mm; width:120mm; font-size:16pt; color:#A2D21E; ">Présentation</div>
-                <div style="position:absolute; text-align:left; left:10mm; top:32mm; width:180mm; font-size:10pt; color:#FAFAFA; ">Indiquez ici une présentation de la recette</div>
-                <textarea id="edit_presentation" style="position:absolute; text-align:left; left:10mm; top:32mm; width:180mm; " class="fillArea"></textarea>
+
+                <textarea id="edit_presentation" style="position:absolute; text-align:left; left:10mm; top:32mm; width:180mm; " class="fillArea" placeholder="Présentation de la recette"></textarea>
                 <div style="position:absolute; text-align:left; left:10mm; top:50mm; width:50mm; font-size:16pt; color:#A2D21E; ">Ingrédients</div>
                 <textarea id="edit_ingredients" style="position:absolute; text-align:left; left:10mm; top:57mm; width:50mm; height:60mm;"
-                    class="fillArea"></textarea>
+                    class="fillArea" placeholder="Liste des ingrédients"></textarea>
                 <div style="position:absolute; text-align:left; left:70mm; top:50mm; width:120mm; font-size:16pt; color:#A2D21E; ">Préparation</div>
                 <textarea id="edit_preparation" style="position:absolute; text-align:left; left:70mm; top:57mm; width:120mm; height:60mm;"
-                    class="fillArea"></textarea>
+                    class="fillArea"  placeholder="Détails de la préparation"></textarea>
                 <div style="position:absolute; text-align:left; left:10mm; top:120mm; width:180mm; font-size:16pt; color:#A2D21E; ">Indications</div>
                 <textarea id="edit_indications" style="position:absolute; text-align:left; left:10mm; top:127mm; width:180mm; height:7mm;"
-                    class="fillArea"></textarea>
+                    class="fillArea" placeholder="Nombre de personnes, temps de préapration ..."></textarea>
             </div>
             <div id="page2" style="display:none;">
                 <input id="edit_nom" style="position:absolute; text-align:right; left:0mm; top:20mm; width:120mm; font-size:30pt; color:#D2691E; "
-                    class="fillArea">
+                    class="fillArea" placeholder="Nom du ou des chefs">
                 <div style="position:absolute; text-align:right; left:0mm; top:10mm; width:120mm; font-size:16pt; color:#A2D21E; ">Le chef</div>
-                
+
                 <img id="img_plat" src="img/plat.jpg" style="position:absolute; left:20mm; top:45mm; width:130mm;" onerror="this.src='img/plat.jpg'">
-                <div id="file_plat" class="dropzone" style="position:absolute; left:23mm; top:49mm; width:116mm; height:82mm; line-height:82mm; vertical-align: middle;">Cliquez ici pour choisir la photo du plat</div>
+                <div id="file_plat" class="dropzone" style="position:absolute; left:23mm; top:49mm; width:116mm; height:82mm; line-height:82mm; vertical-align: middle;">
+                        <span class="imageZoneText">Cliquez ici pour choisir la photo du plat !</span>
+                </div>
                 <img id="img_chef" src="img/chef.jpg" style="position:absolute; left:130mm; top:10mm; width:60mm;" onerror="this.src='img/chef.jpg'">
                 <div id="file_chef" class="dropzone" style="position:absolute; left:133mm; top:13mm; width:48mm; height:48mm; line-height:48mm; vertical-align: middle; ">
-                    <span style ="display: inline-block; vertical-align: middle; line-height: 14px;">Cliquez ici pour choisir la photo du chef !</span>
+                    <span class="imageZoneText">Cliquez ici pour choisir la photo du chef !</span>
                 </div>
-                
-                <input type="file" id="img_plat_selector" name="img_platfile" style="display:none;" accept="image/*"/>
-                <input type="file" id="img_chef_selector" name="img_platfile" style="display:none;" accept="image/*"/>
-                
+
+                <input type="file" id="img_plat_selector" name="img_platfile" style="display:none;" accept="image/*" />
+                <input type="file" id="img_chef_selector" name="img_platfile" style="display:none;" accept="image/*" />
+
             </div>
             <div style="position:absolute; bottom:0px; margin:auto; padding:10px;">
                 <div id="validate" class="button"> Valider </div>
@@ -132,24 +130,79 @@
         </div>
     </div>
     <!-- ########################################################## -->
-
-    
-    <div id="message" style="display:none;position:absolute; left:0px; top:0px; right:0px; bottom:0px; background-color: rgba(0,0,0,.9)">
-            <div style="position:absolute; left:0px; top:0px; right:0px; bottom:0px; width:100mm; height:70mm; background-color:#FFFFFF;margin:auto;">
-                    <div  class="" style="position:absolute; width:100mm; height:70mm; line-height:70mm; text-align: center; ;vertical-align: middle; ">
-                            <span id="message_text" style ="display: inline-block; font-size:14px; text-align: center;vertical-align: middle; line-height: 14px;">Message</span>
-                    </div>
-                    <div id="message_ok" class="button" style="position: absolute; bottom:10px; left:10px;"> Ok </div>
-                   <div id="message_cancel" class="buttonCancel" style="position: absolute; bottom:10px; left:50px;"> Annuler </div>
-            </div>
-    </div>        
+    <div id="fullModel"></div>
     <!-- ########################################################## -->
+    <div id="modify" class="button" style="position: absolute; top:10px; left:130px;">Modifier la recette </div>
+
+    <div id="userForm" class="button" style="position: absolute; top:10px; left:10px;">
+        <div id="identify" style="display:inline-block;">Mon espace</div>
+        <div id="closeUserForm" style="display:none;position:absolute;top:0px; left:0px; height:25px;width:100%;text-align:right;">
+            <div style="padding:5px; font-Size:15px">X</div>
+        </div>
+        <!-- ++++++++++++++++++++++++++ -->
+        <div id="loginform" class="innerForm" style="display:none;">
+
+            <p>
+                Les informations d'identifications vous ont été communiquées
+                <br>dans le cahier de votre enfant.
+                <br>
+                <br> Identifiant
+                <br>
+                <input type="text" id="login" placeholder="Identifiant" name="uid" value="">
+
+                <p>
+                    Mot de passe
+                    <br>
+                    <input type="password" id="password" name="upass" placeholder="******" value="">
+
+                    <br>
+                    <input type="submit" id="dologin" value="Valider">
+
+        </div>
+        <div id="loggedUserForm" class="innerForm" style="display:none;" >
+            <div class="childName"></div>
+            <hr style="position: absolute; top:26px; width:370px" >
+
+            <div style="position: absolute; top:30px; width:370px; padding-top:10px;">
+                    <div>Adresse mail :</div><input type="text" id="email" size="40">
+                    <div style="margin-top:5px;" >Précommandes de livres :</div><input type="text" id="Preco" size="4" >
+                </div>
+            
+            <hr style="position: absolute; top:120px; width:370px" >
+            <div id="create" class="button" style="position: absolute; top :135px; left:10px;"> Créer une recette &gt;&gt;</div>
+            <div id="myRecette" style="position: absolute; top:190px; width:370px">Voir mes recettes : </div>
+            <div id="userRecetteList" style="position: absolute; top:200px; width:370px">
+
+            </div>
+            
+            
+            
+
+        </div>
+        <!-- ++++++++++++++++++++++++++ -->
+    </div>
+    <!-- ########################################################## -->
+    <div id="message" style="display:none;position:absolute; left:0px; top:0px; right:0px; bottom:0px; background-color: rgba(0,0,0,.9)">
+        <div style="position:absolute; left:0px; top:0px; right:0px; bottom:0px; width:150mm; height:100mm; background-color:#FFFFFF;margin:auto;border-radius: 5px;">
+            <div class="" style="position:absolute; width:150mm; height:100mm; line-height:100mm; text-align: center; ;vertical-align: middle; ">
+                <span id="message_text" style="display: inline-block; font-size:14px; text-align: center;vertical-align: middle; line-height: 25px;padding:10mm;">Message</span>
+            </div>
+            <div id="message_ok" class="button" style="position: absolute; bottom:10px; left:10px;"> Ok </div>
+            <div id="message_cancel" class="buttonCancel" style="position: absolute; bottom:10px; left:50px;"> Annuler </div>
+        </div>
+    </div>
+
 
     <div id="loading" style="display:none;position:absolute; left:0px; top:0px; right:0px; bottom:0px; background-color: rgba(255,255,255,.9)">
-            <img src="img/wait.gif" style=" position: absolute; margin: auto; top: 0; left: 0; right: 0; bottom: 0;">
-    </div>        
+        <img src="img/wait.gif" style=" position: absolute; margin: auto; top: 0; left: 0; right: 0; bottom: 0;">
+    </div>
     <!-- ########################################################## -->
-    <div id="fullModel"></div>
+
+
+
+    <!-- ########################################################## -->
+
+
 </body>
 
 </html>

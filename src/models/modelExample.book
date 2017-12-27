@@ -113,8 +113,8 @@
 						"background-color": "#FFFFFF", "elements":[
 						{"type":"text", "name":"recette_nom", "value":"@page@nom","align":"right","fontsize":"30","top":"20", "left":"0", "width":"120",  "color":"@document@color1"},
 						{"type":"text",  "value":"Le chef","align":"right","fontsize":"16","top":"10", "left":"0", "width":"120",  "color":"#A2D21E"},
-						{"type":"image","url":"@page@url_plat", "top":"45", "left":"20", "width":"130"},
-						{"type":"image","url":"@page@url_chef", "top":"10", "left":"130", "width":"60"},
+						{"type":"image","name":"recette_img_plat","url":"@page@url_plat", "top":"45", "left":"20", "width":"130"},
+						{"type":"image","name":"recette_img_chef","url":"@page@url_chef", "top":"10", "left":"130", "width":"60"},
 						{"type":"text", "name":"recette_indications", "value":"@numero_page@current@","align":"right","fontsize":"8","top":"138", "left":"10", "width":"190", "color":"#0"}
 						]
 					}
@@ -161,8 +161,8 @@
 						"background-color": "#FFFFFF", "elements":[
 						{"type":"text", "name":"recette_nom", "value":"@page@nom","align":"right","fontsize":"30","top":"20", "left":"0", "width":"120",  "color":"@document@color2"},
 						{"type":"text",  "value":"Le chef","align":"right","fontsize":"16","top":"10", "left":"0", "width":"120",  "color":"#A2D21E"},
-						{"type":"image","url":"@page@url_plat", "top":"45", "left":"20", "width":"130"},
-						{"type":"image","url":"@page@url_chef", "top":"10", "left":"130", "width":"60"},
+						{"type":"image","name":"recette_img_plat","url":"@page@url_plat", "top":"45", "left":"20", "width":"130"},
+						{"type":"image","name":"recette_img_chef","url":"@page@url_chef", "top":"10", "left":"130", "width":"60"},
 						{"type":"text", "name":"recette_indications", "value":"@numero_page@current@","align":"right","fontsize":"8","top":"138", "left":"10", "width":"190", "color":"#0"}
 						]
 					}
@@ -210,8 +210,8 @@
 						"background-color": "#FFFFFF", "elements":[
 						{"type":"text", "name":"recette_nom", "value":"@page@nom","align":"right","fontsize":"30","top":"20", "left":"0", "width":"120",  "color":"@document@color3"},
 						{"type":"text",  "value":"Le chef","align":"right","fontsize":"16","top":"10", "left":"0", "width":"120",  "color":"#A2D21E"},
-						{"type":"image","url":"@page@url_plat", "top":"45", "left":"20", "width":"130"},
-						{"type":"image","url":"@page@url_chef", "top":"10", "left":"130", "width":"60"},
+						{"type":"image","name":"recette_img_plat","url":"@page@url_plat", "top":"45", "left":"20", "width":"130"},
+						{"type":"image","name":"recette_img_chef","url":"@page@url_chef", "top":"10", "left":"130", "width":"60"},
 						{"type":"text", "name":"recette_indications", "value":"@numero_page@current@","align":"right","fontsize":"8","top":"138", "left":"10", "width":"190", "color":"#0"}
 						]
 					}

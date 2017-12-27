@@ -4,7 +4,6 @@ include 'parser.php';
 require "modelExpander.php";
 
 $model = getExpandedModel("modeles/modelExample.book");
-//var_dump($model);
 
 function getModelJS($model){
     $modelJS ="";
@@ -73,12 +72,11 @@ if (isset($_GET["nbPage"])){
         $idxPage=0;
        
         foreach ($model->{"pages"} as $page){
-            echo "<div id='modelPage".$idxPage."' style='display:none'>";
             echo pageHTML($model, $idxPage);
-            echo "</div>";
+            echo "BOUNDARY--MODEL";
             $idxPage++;
         }
-        echo "<script>";
+        echo "<script id='scriptModel'>";
         echo "model=" . getmodelJS($model);
         echo "</script>";
          

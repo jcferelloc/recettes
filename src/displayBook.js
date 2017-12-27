@@ -2,6 +2,7 @@ var currentPage = 0;
 var model;
 var nbPage = 0;
 var mode = 2;
+var HTMLModel;
 
 
 
@@ -69,7 +70,7 @@ var calcZoom = function () {
 
 
 var loadPage = function (number, id) {
-    $("#" + id).html($("#modelPage" + number).html());
+    $("#" + id).html(HTMLModel[ number ]);
     $(".pageNumber").click(function () {
         gotoPage(parseInt($(this).text()));
     });
@@ -85,7 +86,7 @@ var loadPage = function (number, id) {
     }
 
 
-    if ($("#current_recette_id").text() != "") {
+    if ($("#current_recette_id").text() != "" && (userData.admin == "1" || $("#current_recette_userID").text() == userData.userID )) {
         $("#modify").show();
     } else {
         $("#modify").hide();
@@ -106,7 +107,8 @@ function loadModel(callBack) {
         method: "GET",
         url: "page.php?" + Math.random(),
         success: function (data) {
-            $("#fullModel").html(data);
+            HTMLModel = data.split("BOUNDARY--MODEL");
+            $("#fullModel").html(HTMLModel[HTMLModel.length-1]);
             nbPage = model.length;
         },
         complete: function () {
