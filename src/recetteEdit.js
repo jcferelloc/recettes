@@ -1,6 +1,6 @@
 var sequence = [];
 var sequenceID = 0;
-
+var editBaseline = new Object;
 // Initialise resize library
 var resize = new window.resize();
 resize.init();
@@ -9,12 +9,16 @@ function uploadAll() {
     if (sequenceID == -1) {
         $("#loading").show();
     }
-    if (sequenceID >= sequence.length - 1) {
+    if (sequenceID >= sequence.length) {
         $("#loading").hide();
         return;
     }
     sequenceID++;
-    sequence[sequenceID][0].call(undefined, uploadAll, sequence[sequenceID][1], sequence[sequenceID][2], sequence[sequenceID][3]);
+    var params = new Array;
+    params.push(uploadAll);
+    params = params.concat(sequence[sequenceID].slice(1));
+    //sequence[sequenceID][0].call(undefined, uploadAll, sequence[sequenceID][1], sequence[sequenceID][2], sequence[sequenceID][3], sequence[sequenceID][4]);
+    sequence[sequenceID][0].apply(undefined, params);
 }
 
 function checkRecette() {
@@ -115,37 +119,11 @@ function checkRecette() {
     if (upload_img_plat) sequence.push([uploadPhoto, "img_plat", recetteID + "_" + idPhotoPlat]);
     if (upload_img_chef) sequence.push([uploadPhoto, "img_chef", recetteID + "_" + idPhotoChef]);
     sequence.push([loadModel]);
+    sequence.push([refreshRecetteList]);
     sequence.push([gotoRecette, recetteID]);
 
 
     return true;
-}
-
-function messageBox(text, okCallBack, cancelCallBack) {
-    $("#message_ok").unbind("click");
-    $("#message_cancel").unbind("click");
-    if (okCallBack == undefined) {
-        $("#message_ok").click(function () {
-            $("#message").hide();
-        });
-    } else {
-        $("#message_ok").click(function () {
-            okCallBack.call();
-            $("#message").hide();
-        });
-    }
-
-    if (cancelCallBack == undefined) {
-        $("#message_cancel").hide();
-    } else {
-        $("#message_cancel").click(function () {
-            cancelCallBack.call();
-            $("#message").hide();
-        });
-    }
-
-    $("#message_text").html(text);
-    $("#message").show();
 }
 
 function uploadRecette(callBack, recetteID, idPhotoPlat, idPhotoChef, action) {
@@ -231,15 +209,15 @@ function loadPhoto(evt, imgID) {
 
 function isEditRecetteModified() {
     if ($("#edit_id").text() != "") {
-        return ($("#edit_titre").val() != $("#current_recette_titre").text() ||
-            $("#edit_presentation").val() != $("#current_recette_presentation").text() ||
-            $("#edit_ingredients").val() != $("#current_recette_ingredients").text() ||
-            $("#edit_preparation").val() != $("#current_recette_preparation").text() ||
-            $("#edit_indications").val() != $("#current_recette_indications").text() ||
-            $("#edit_nom").val() != $("#current_recette_nom").text() ||
-            $("#edit_categorie").val() != $("#current_recette_categorie").text() ||
-            $("#img_plat").attr("src") != $("#current_recette_img_plat").attr('src') ||
-            $("#img_chef").attr("src") != $("#current_recette_img_chef").attr('src'));
+        return ($("#edit_titre").val()    != editBaseline.titre  ||
+            $("#edit_presentation").val() != editBaseline.presentation  ||
+            $("#edit_ingredients").val()  != editBaseline.ingredients ||
+            $("#edit_preparation").val()  != editBaseline.preparation  ||
+            $("#edit_indications").val()  != editBaseline.indications  ||
+            $("#edit_nom").val()          != editBaseline.nom  ||
+            $("#edit_categorie").val()    != editBaseline.categorie  ||
+            $("#img_plat").attr("src")    != editBaseline.plat  ||
+            $("#img_chef").attr("src")    != editBaseline.chef  );
     } else {
         return ($("#edit_titre").val() != "" ||
             $("#edit_presentation").val() != "" ||
@@ -305,17 +283,29 @@ $(document).ready(function () {
     });
 
     $("#modify").click(function () {
+        editBaseline = new Object;
+
+        editBaseline.titre=$("#current_recette_titre").text();
+        editBaseline.presentation=$("#current_recette_presentation").html().replace(/<br>/g,"\n");
+        editBaseline.ingredients=$("#current_recette_ingredients").html().replace(/<br>/g,"\n");
+        editBaseline.preparation=$("#current_recette_preparation").html().replace(/<br>/g,"\n");
+        editBaseline.indications=$("#current_recette_indications").html().replace(/<br>/g,"\n");
+        editBaseline.nom=$("#current_recette_nom").text();
+        editBaseline.categorie=$("#current_recette_categorie").text();
+        editBaseline.plat=$("#current_recette_img_plat").attr('src');
+        editBaseline.chef=$("#current_recette_img_chef").attr('src');
+
         $("#edit_id").text($("#current_recette_id").text());
         $("#edit_userID").text($("#current_recette_userID").text());
-        $("#edit_titre").val($("#current_recette_titre").text());
-        $("#edit_presentation").val($("#current_recette_presentation").text());
-        $("#edit_ingredients").val($("#current_recette_ingredients").text());
-        $("#edit_preparation").val($("#current_recette_preparation").text());
-        $("#edit_indications").val($("#current_recette_indications").text());
-        $("#edit_nom").val($("#current_recette_nom").text());
-        $("#edit_categorie").val($("#current_recette_categorie").text());
-        $("#img_plat").attr("src", $("#current_recette_img_plat").attr('src'));
-        $("#img_chef").attr("src", $("#current_recette_img_chef").attr('src'));
+        $("#edit_titre").val(       editBaseline.titre);
+        $("#edit_presentation").val(editBaseline.presentation);
+        $("#edit_ingredients").val( editBaseline.ingredients);
+        $("#edit_preparation").val( editBaseline.preparation);
+        $("#edit_indications").val( editBaseline.indications);
+        $("#edit_nom").val(         editBaseline.nom);
+        $("#edit_categorie").val(   editBaseline.categorie);
+        $("#img_plat").attr("src",  editBaseline.plat);
+        $("#img_chef").attr("src",  editBaseline.chef);
         $("#img_plat_selector").val("");
         $("#img_chef_selector").val("");
         checkEditRecetteChanges();

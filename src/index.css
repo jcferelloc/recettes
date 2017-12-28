@@ -91,6 +91,7 @@
     font-family: latoLight;
     border: dashed 1px #CACACA;
     resize: none;
+    font-weight:bold;
 }
 
 .dropzone {
@@ -203,11 +204,12 @@
 .userRecette{
     cursor: pointer;
     margin:5px;
-    padding: 3px;
+    padding: 5px;
 }
 .userRecette:hover{
 background-color: #07c;
 border-radius:3px;
+color:white;
 }
 
 .imageZoneText{

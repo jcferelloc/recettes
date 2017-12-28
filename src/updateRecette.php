@@ -18,6 +18,7 @@ $action = htmlspecialchars($params["action"]);
 
 if ( $action != "delete"){
     $id = htmlspecialchars($params["id"]);
+    $userID = htmlspecialchars($params["userID"]);
     $nom = textTreatment($params["nom"]);
     $categorie = htmlspecialchars($params["categorie"]);
     $titre = textTreatment($params["titre"]);
@@ -35,9 +36,12 @@ $connection = connect();
 
 if ( $action == "new" ){
     $query = "INSERT INTO `". getTable("recettes") ."` " ;
-    $query .= " ( id, nom, categorie, titre, presentation, ingredients, preparation, indications, url_plat, url_chef) ";
-    $query .= " VALUES (";
+    $query .= " ( id, userID, nom, categorie, titre, presentation, ingredients, preparation, indications";
+    if ( $idPhotoPlat != "" ) $query .= ", url_plat";
+    if ( $idPhotoChef != "" ) $query .= ", url_chef";
+    $query .= " ) VALUES (";
     $query .= "'" . $id . "', ";
+    $query .= "'" . $userID . "', ";
     $query .= "'" . $nom . "', ";
     $query .= "'" . $categorie . "', ";
     $query .= "'" . $titre . "', ";

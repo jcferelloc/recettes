@@ -37,21 +37,7 @@ function checkCredentials() {
                     displayName += "<span style='color:red; margin-left:10px; '>Relecteur</span>";
                 }
                 $(".childName").html(displayName);
-                for (let index = 0; index < model.length; index++) {
-                    const element = model[index];
-                    if (element.recette_userID == userData.userID) {
-                        elList = $('<div>');
-                        elList.addClass("userRecette");
-                  
-                        elList.attr("recette_id", element.recette_id);
-                        elList.text(element.recette_titre + " >>");
-                        $("#userRecetteList").append(elList);
-                    }
-                }
-                $(".userRecette").click(function () {
-                    gotoRecette(undefined, parseInt($(this).attr('recette_id')));
-                    closeUserForm();
-                });
+                refreshRecetteList();
             } else {
                 messageBox("Les informations fournies ne permettent pas de vous identifier<br> En cas de soucis vous pouvez contacter l'APE : <a href='mailto:apeledrennec@gmail.com'>apeledrennec@gmail.com</a>.");
             }
@@ -69,11 +55,34 @@ function closeUserForm() {
     $("#loggedUserForm").hide();
     $("#userForm").animate({ "height": userFormSize.height, "width": userFormSize.width });
     userFormOpen = false;
+    enterKeyCallBack = null;
+}
+
+function refreshRecetteList(callBack) {
+    $("#userRecetteList").html("");
+    for (let index = 0; index < model.length; index++) {
+        const element = model[index];
+        if (element.recette_userID == userData.userID) {
+            elList = $('<div>');
+            elList.addClass("userRecette");
+
+            elList.attr("recette_id", element.recette_id);
+            elList.text(element.recette_titre + " >>");
+            $("#userRecetteList").append(elList);
+        }
+    }
+    $(".userRecette").click(function () {
+        gotoRecette(undefined, parseInt($(this).attr('recette_id')));
+        closeUserForm();
+    });
+    if (callBack != null) {
+        callBack.call();
+    }
 }
 
 $(document).ready(function () {
 
-    $("#identify").click(function () {
+    $("#userForm").click(function () {
         if (!userFormOpen) {
             userFormSize = { "width": $("#identify").css("width"), "height": $("#identify").css("height") };
             $("#userForm").animate({ "height": "400px", "width": "400px" }, function () {
@@ -82,17 +91,19 @@ $(document).ready(function () {
                     $("#loggedUserForm").show();
                 } else {
                     $("#loginform").show();
+                    enterKeyCallBack = checkCredentials;
                 }
 
             });
             userFormOpen = true;
-
+        } else {
+            closeUserForm();
         }
     });
-    $("#closeUserForm").click(function () {
-        closeUserForm();
+    
+    $(".innerForm").click(function (event) {
+        event.stopPropagation();
     });
-
 
     $("#dologin").click(function () {
         checkCredentials();

@@ -3,6 +3,7 @@ var model;
 var nbPage = 0;
 var mode = 2;
 var HTMLModel;
+var enterKeyCallBack = null;
 
 
 
@@ -93,10 +94,10 @@ var loadPage = function (number, id) {
     }
 }
 function handleImgError(img) {
-    if ($(img).attr("id") == "recette_img_plat") {
+    if ($(img).attr("id") == "current_recette_img_plat") {
         $("#current_recette_img_plat").attr('src', 'img/plat.jpg');
     }
-    if ($(img).attr("id") == "recette_img_chef") {
+    if ($(img).attr("id") == "current_recette_img_chef") {
         $("#current_recette_img_chef").attr('src', 'img/chef.jpg');
     };
 }
@@ -118,6 +119,42 @@ function loadModel(callBack) {
         }
     });
 }
+
+
+function messageBox(text, okCallBack, cancelCallBack) {
+    $("#message_ok").unbind("click");
+    $("#message_cancel").unbind("click");
+    if (okCallBack == undefined) {
+        $("#message_ok").click(function () {
+            $("#message").hide();
+            enterKeyCallBack = null;
+        });
+    } else {
+        $("#message_ok").click(function () {
+            okCallBack.call();
+            $("#message").hide();
+            enterKeyCallBack = null;
+        });
+    }
+
+    if (cancelCallBack == undefined) {
+        $("#message_cancel").hide();
+    } else {
+        $("#message_cancel").show();
+        $("#message_cancel").click(function () {
+            cancelCallBack.call();
+            $("#message").hide();
+            enterKeyCallBack = null;
+        });
+    }
+    enterKeyCallBack = function (){
+        $("#message_ok").click();
+        enterKeyCallBack = null;
+    }
+    $("#message_text").html(text);
+    $("#message").show();
+}
+
 
 $("document").ready(function () {
 
@@ -162,6 +199,12 @@ $("document").ready(function () {
 
     $(window).on('resize', function () {
         calcZoom();
+    });
+
+    $(window).keyup( function(event) {
+        if (event.keyCode === 13 && enterKeyCallBack!=null) {
+            enterKeyCallBack.call();
+        }
     });
 
     calcZoom();
