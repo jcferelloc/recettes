@@ -33,8 +33,11 @@ function checkCredentials() {
                 userData.date_1 = returnedValue.date_1;
                 userData.admin = returnedValue.admin;
                 var displayName = "<b>" + userData.prenom_1 + " " + userData.nom_1 + "</b> ( " + classText[userData.classe_1] + " )";
-                if (userData.admin == "1") {
+                if (userData.admin == "1" || userData.admin == "2") {
                     displayName += "<span style='color:red; margin-left:10px; '>Relecteur</span>";
+                }
+                if ( userData.admin == "2" ) {
+                    $("#adminButton").show();
                 }
                 $(".childName").html(displayName);
                 refreshRecetteList();

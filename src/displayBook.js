@@ -87,7 +87,7 @@ var loadPage = function (number, id) {
     }
 
 
-    if ($("#current_recette_id").text() != "" && (userData.admin == "1" || $("#current_recette_userID").text() == userData.userID )) {
+    if ($("#current_recette_id").text() != "" && (userData.admin == "1" || userData.admin == "2" || $("#current_recette_userID").text() == userData.userID )) {
         $("#modify").show();
     } else {
         $("#modify").hide();

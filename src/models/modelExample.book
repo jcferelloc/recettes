@@ -12,11 +12,11 @@
 		{
 			"elements":[
 				{"type":"text","value":"Sommaire","align":"center","fontsize":"30","top":"15", "left":"0", "width":"210", "color":"#A2D21E"},
-				{"type":"text","value":"Les entrées","align":"left","fontsize":"20","top":"55", "left":"55", "width":"180", "color":"@document@color0"},
-				{"type":"text","value":"Les plats","align":"left","fontsize":"20","top":"65", "left":"55", "width":"180", "color":"@document@color1"},
-				{"type":"text","value":"Les desserts","align":"left","fontsize":"20","top":"75", "left":"55", "width":"180", "color":"@document@color2"},
-				{"type":"text","value":"Autres recettes","align":"left","fontsize":"20","top":"85", "left":"55", "width":"180", "color":"@document@color3"},
-				{"type":"text","value":"Table des recettes","align":"left","fontsize":"20","top":"95", "left":"55", "width":"180", "color":"#0"},
+				{"type":"text","value":"Les entrées","align":"left","fontsize":"20","top":"55", "left":"55", "width":"100", "color":"@document@color0"},
+				{"type":"text","value":"Les plats","align":"left","fontsize":"20","top":"65", "left":"55", "width":"100", "color":"@document@color1"},
+				{"type":"text","value":"Les desserts","align":"left","fontsize":"20","top":"75", "left":"55", "width":"100", "color":"@document@color2"},
+				{"type":"text","value":"Autres recettes","align":"left","fontsize":"20","top":"85", "left":"55", "width":"100", "color":"@document@color3"},
+				{"type":"text","value":"Table des recettes","align":"left","fontsize":"20","top":"95", "left":"55", "width":"100", "color":"#0"},
 
 				{"type":"text","class":"pageNumber", "value":"@numero_page@entete_categorie@0","align":"right","fontsize":"15","top":"57", "left":"55", "width":"100", "color":"@document@color0"},
 				{"type":"text","class":"pageNumber", "value":"@numero_page@entete_categorie@1","align":"right","fontsize":"15","top":"67", "left":"55", "width":"100", "color":"@document@color1"},

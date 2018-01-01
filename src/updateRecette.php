@@ -54,6 +54,7 @@ if ( $action == "new" ){
     $query .= ");" ;
 
     $result = $connection->query( $query );
+    logActivity($connection,"create ".$id);
 }else if ($action == "delete" ){
     $query = "DELETE FROM `". getTable("recettes") ."` " ;
     $query .= "WHERE id = '" . $id . "';";
@@ -72,8 +73,10 @@ if ( $action == "new" ){
     if ( $idPhotoPlat != "" ) $query .= ", url_plat = " . "'upload/plat_" . $id . "_" . $idPhotoPlat. ".jpg'";
     if ( $idPhotoChef != "" ) $query .= ", url_chef = " . "'upload/chef_" . $id . "_" . $idPhotoChef. ".jpg'";
     $query .= "WHERE id = " . $id . ";";
-var_dump($query);
+
     $result = $connection->query( $query );
+
+    logActivity($connection,"update ".$id);
 }
 if ( ! $result ){
 	print $connection->error . " : " . $query ;

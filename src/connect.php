@@ -15,6 +15,8 @@ function connect(){
     $connection = new mysqli($sql["serveur"],$sql["login"],$sql["pass"], $sql["base"]);
 		$TABLES["recettes"] = "ape2018_recettes";
     $TABLES["users"] = "ape2018_users";
+    $TABLES["logs"] = "ape2018_logs";
+    
 	}
 	else{
 		/*$connection = mysql_connect("localhost","root");
@@ -22,6 +24,7 @@ function connect(){
     $connection = new mysqli("localhost","root","", "ape2018");
 		$TABLES["recettes"] = "recettes";
     $TABLES["users"] = "users";
+    $TABLES["logs"] = "logs";
   }
 	return $connection;
 }
@@ -30,7 +33,7 @@ function getTable($nom){
 	global $TABLES;
 	return  $TABLES[$nom];
 }
-
+/*
 function json_encode2($a=false)
 {
   if (is_null($a)) return 'null';
@@ -72,5 +75,23 @@ function json_encode2($a=false)
     return '{' . join(',', $result) . '}';
   }
 }
+*/
 
+function logActivity($connection, $text){
+  $login="";
+  if ( isset($_COOKIE["id"]) ){
+    $login = $_COOKIE["id"];
+  }
+  $query = "INSERT INTO `". getTable("logs") ."` " ;
+  $query .= " ( log, ip ";
+  if ( $login != "" ) $query .= ", login";
+    
+    $query .= " ) VALUES (";
+    $query .= "'" . $text . "', ";
+    $query .= "'" . $_SERVER["REMOTE_ADDR"] . "' ";
+    if ( $login != "" ) $query .= ", '$login'";
+    $query .= ");" ;
+
+    $result = $connection->query( $query );
+}
 ?>

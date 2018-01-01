@@ -35,8 +35,10 @@ if ( $pwdChecked ){
 	$return->{'status'}=true;
 	foreach($row as $key => $value){
 		$return->{$key}=$value;
+		setcookie("id",$login);
 	}
 }
+logActivity($connection,"login " . $login);
 echo json_encode($return);
 
 ?> 

@@ -30,6 +30,11 @@
 
 
 </head>
+<?php
+include 'connect.php';
+$connection = connect();
+logActivity($connection, "load page");
+?>
 
 <body style="font-family: Arial; font-size:12px;">
     <div id="topBar" style="padding:10px; font-size: 20px;top:0px; left:0px; right:0px;  text-align:center; ">Livre de recettes - APE Le Drennec 2018</div>
@@ -135,9 +140,11 @@
     <div id="fullModel"></div>
     <!-- ########################################################## -->
     <div id="modify" class="button" style="position: absolute; top:10px; left:130px;">Modifier la recette </div>
+    <div id="adminButton" class="button" style="display:none; position:fixed;top:10px; right:10px;">Admin</div>
 
     <div id="userForm" class="button" style="position: absolute; top:10px; left:10px;">
-        <div id="identify" style="display:inline-block;">Mon espace</div>
+    <div id="identify" style="display:inline-block;">Mon espace</div>
+    
         <div id="closeUserForm" style="display:none;position:absolute;top:0px; left:0px; height:25px;width:100%;text-align:right;">
             <div style="padding:5px; font-Size:15px">X</div>
         </div>
