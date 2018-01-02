@@ -36,8 +36,8 @@ function checkCredentials() {
                 if (userData.admin == "1" || userData.admin == "2") {
                     displayName += "<span style='color:red; margin-left:10px; '>Relecteur</span>";
                 }
-                if ( userData.admin == "2" ) {
-                    $("#adminButton").show();
+                if (userData.admin == "2") {
+                    $(".adminButton").show();
                 }
                 $(".childName").html(displayName);
                 refreshRecetteList();
@@ -103,7 +103,7 @@ $(document).ready(function () {
             closeUserForm();
         }
     });
-    
+
     $(".innerForm").click(function (event) {
         event.stopPropagation();
     });
@@ -111,6 +111,52 @@ $(document).ready(function () {
     $("#dologin").click(function () {
         checkCredentials();
     });
+
+    $("#statsButton").click(function () {
+        $.ajax({
+            url: "stats.php?js",
+            type: "GET",
+            success: function (data) {
+                stats = JSON.parse(data);
+                message = "<u>Statistiques</u>:<br>";
+                message += "<li><b>" + stats.nbRecettes.NB +"</b> recettes ("
+                stats.nbRecettesPerCateg.forEach(element => {
+                    message += "<b>" + element.NB +"</b> ";
+                    switch (element.categorie){
+                        case "0" :
+                        message += " Entrées, ";
+                        break;
+                        case "1" :
+                        message += " Plats, ";
+                        break;
+                        case "2" :
+                        message += " Desserts, ";
+                        break;
+                        case "3" :
+                        message += " Autres";
+                        break;
+                    }
+                });
+                message += ")<br> ";
+                if ( stats.nbRecettesMissingPhoto.NB > 0 ){
+                    message += "<li>Il manque au moins une photo sur <b>" + stats.nbRecettesMissingPhoto.NB +"</b> recettes </li>";
+                }else{
+                    message += "<li>Toutes les recettes ont des photos</li>";
+                }
+                message += "<li><b>" + stats.visitorsTotal.NB +"</b> personnes sont venues sur le site (" + stats.visitorsTotalToday.NB + " aujourd'hui, "+ stats.visitorsTotalAweek.NB +" cette semaine) </li>";
+                message += "<li>Le volume occupé par les photos est <b>" + stats.photoFolderSize.size +"</b></li>";
+                
+                
+                messageBox(message);
+            }
+        })
+    });
+
+    $("#PDFButton").click(function () {
+        window.open("generatePDF.php","PDFWINDOW", "location=0,menubar=0,status=0,fullscreen=1");
+    });
+
+
 
     messageBox("Si vous êtes parent d'élève veuillez vous identifier pour apporter votre contribution à ce livre, en cliquant sur le bouton 'Mon espace'.");
 });

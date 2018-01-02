@@ -140,7 +140,8 @@ logActivity($connection, "load page");
     <div id="fullModel"></div>
     <!-- ########################################################## -->
     <div id="modify" class="button" style="position: absolute; top:10px; left:130px;">Modifier la recette </div>
-    <div id="adminButton" class="button" style="display:none; position:fixed;top:10px; right:10px;">Admin</div>
+    <div id="statsButton" class="button adminButton" style="display:none; position:fixed;top:10px; right:10px;">Stats</div>
+    <div id="PDFButton" class="button adminButton" style="display:none; position:fixed;top:10px; right:60px;">PDF</div>
 
     <div id="userForm" class="button" style="position: absolute; top:10px; left:10px;">
     <div id="identify" style="display:inline-block;">Mon espace</div>

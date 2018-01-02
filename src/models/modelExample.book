@@ -262,7 +262,7 @@
 		},{
 			
 			"elements":[
-				{"type":"image","url":"img/atable.jpg", "top":"15", "left":"55", "width":"100"},
+				{"type":"image","url":"img/atable2.jpg", "top":"35", "left":"15", "width":"180"},
 				{"type":"text","align":"center","fontsize":"20","top":"125", "left":"30", "width":"150",  "color":"#081350","value":"S P O N S O R S ?"}
 			]
 

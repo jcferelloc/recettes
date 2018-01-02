@@ -31,7 +31,7 @@ $pdf->SetAutoPageBreak(false);
 for ( $number = $start; $number < $start+$nb ; $number++ ){
     pagePDF($number);
 }
-$pdf->Output();
+$pdf->Output("I", "Livre recettes APE 2018" . date("j-m-Y") . ".pdf");
 
 
 function pagePDF($number){
