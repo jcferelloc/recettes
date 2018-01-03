@@ -39,7 +39,7 @@ $query = "SELECT COUNT( * ) as NB FROM `" . getTable("recettes") . "` WHERE ! (u
 $returnData->{"nbRecettesMissingPhoto"} = getResults($connection->query($query));
 
 //Nombre famille loggées total
-$query = "SELECT COUNT( DISTINCT login ) as NB FROM `" . getTable("logs") . "` WHERE ! (login > '')  ;";
+$query = "SELECT COUNT( DISTINCT login ) as NB FROM `" . getTable("logs") . "` WHERE  (login > '')  ;";
 $returnData->{"familiesTotal"} = getResults($connection->query($query));
 
 
@@ -83,28 +83,33 @@ function foldersize($dir)
     return $count_size;
 }
 
-function format_size($size) {
+function format_size($size)
+{
     $mod = 1024;
-    $units = explode(' ','B KB MB GB TB PB');
+    $units = explode(' ', 'B KB MB GB TB PB');
     for ($i = 0; $size > $mod; $i++) {
-      $size /= $mod;
+        $size /= $mod;
     }
-  
+
     return round($size, 2) . ' ' . $units[$i];
-  }
-  
-
-
-
-
-
-
-
-
-
+}
 
 if (isset($_GET["js"])) {
     echo json_encode($returnData);
+} else {
+    $message = "<u>Statistiques</u>:<br>";
+    $message .= "<li><b>" . $returnData->{"nbRecettes"}["NB"] . "</b> recettes";
+    if ($returnData->{"nbRecettesMissingPhoto"}["NB"] > 0) {
+        $message .= "<li>Il manque au moins une photo sur <b>" . $returnData->{"nbRecettesMissingPhoto"}["NB"] . "</b> recettes </li>";
+    } else {
+        $message .= "<li>Toutes les recettes ont des photos</li>";
+    }
+    $message .= "<li><b>" . $returnData->{"familiesTotal"}["NB"] . "</b> familles logguées au moins une fois </li>";
+
+    $message .= "<li><b>" . $returnData->{"visitorsTotal"}["NB"] . "</b> personnes sont venues sur le site (" . $returnData->{"visitorsTotalToday"}["NB"] . " aujourd'hui, " . $returnData->{"visitorsTotalAweek"}["NB"] . " cette semaine) </li>";
+    $message .= "<li>Le volume occupé par les photos est <b>" . $returnData->{"photoFolderSize"}->{"size"} . "</b></li>";
+    header('content-type:text/html; charset=utf-8');
+    echo $message;
 }
 
 

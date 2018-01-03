@@ -44,7 +44,6 @@ function checkCredentials() {
             } else {
                 messageBox("Les informations fournies ne permettent pas de vous identifier<br> En cas de soucis vous pouvez contacter l'APE : <a href='mailto:apeledrennec@gmail.com'>apeledrennec@gmail.com</a>.");
             }
-            console.log(data);
         },
         complete: function () {
 
@@ -53,10 +52,14 @@ function checkCredentials() {
 }
 
 function closeUserForm() {
-    $("#closeUserForm").hide();
-    $("#loginform").hide();
-    $("#loggedUserForm").hide();
-    $("#userForm").animate({ "height": userFormSize.height, "width": userFormSize.width });
+
+    $("#userForm").animate({ "height": userFormSize.height, "width": userFormSize.width }, {
+        complete: function () {
+            $("#closeUserForm").hide();
+            $("#loginform").hide();
+            $("#loggedUserForm").hide();
+        }
+    });
     userFormOpen = false;
     enterKeyCallBack = null;
 }
@@ -82,6 +85,30 @@ function refreshRecetteList(callBack) {
         callBack.call();
     }
 }
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
+function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    var expires = "expires="+d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
 
 $(document).ready(function () {
 
@@ -119,44 +146,51 @@ $(document).ready(function () {
             success: function (data) {
                 stats = JSON.parse(data);
                 message = "<u>Statistiques</u>:<br>";
-                message += "<li><b>" + stats.nbRecettes.NB +"</b> recettes ("
-                stats.nbRecettesPerCateg.forEach(element => {
-                    message += "<b>" + element.NB +"</b> ";
-                    switch (element.categorie){
-                        case "0" :
-                        message += " Entrées, ";
-                        break;
-                        case "1" :
-                        message += " Plats, ";
-                        break;
-                        case "2" :
-                        message += " Desserts, ";
-                        break;
-                        case "3" :
-                        message += " Autres";
-                        break;
-                    }
-                });
-                message += ")<br> ";
-                if ( stats.nbRecettesMissingPhoto.NB > 0 ){
-                    message += "<li>Il manque au moins une photo sur <b>" + stats.nbRecettesMissingPhoto.NB +"</b> recettes </li>";
-                }else{
+                message += "<li><b>" + stats.nbRecettes.NB + "</b> recettes";
+                if (typeof (stats.nbRecettesPerCateg) == "object" && stats.nbRecettesPerCateg instanceof Array) {
+                    message += "(";
+                    stats.nbRecettesPerCateg.forEach(element => {
+                        message += "<b>" + element.NB + "</b> ";
+                        switch (element.categorie) {
+                            case "0":
+                                message += " Entrées, ";
+                                break;
+                            case "1":
+                                message += " Plats, ";
+                                break;
+                            case "2":
+                                message += " Desserts, ";
+                                break;
+                            case "3":
+                                message += " Autres";
+                                break;
+                        }
+                    });
+                    message += ")<br> ";
+                }
+                if (stats.nbRecettesMissingPhoto.NB > 0) {
+                    message += "<li>Il manque au moins une photo sur <b>" + stats.nbRecettesMissingPhoto.NB + "</b> recettes </li>";
+                } else {
                     message += "<li>Toutes les recettes ont des photos</li>";
                 }
-                message += "<li><b>" + stats.visitorsTotal.NB +"</b> personnes sont venues sur le site (" + stats.visitorsTotalToday.NB + " aujourd'hui, "+ stats.visitorsTotalAweek.NB +" cette semaine) </li>";
-                message += "<li>Le volume occupé par les photos est <b>" + stats.photoFolderSize.size +"</b></li>";
-                
-                
+                message += "<li><b>" + stats.familiesTotal.NB + "</b> familles logguées au moins une fois </li>";
+
+                message += "<li><b>" + stats.visitorsTotal.NB + "</b> personnes sont venues sur le site (" + stats.visitorsTotalToday.NB + " aujourd'hui, " + stats.visitorsTotalAweek.NB + " cette semaine) </li>";
+                message += "<li>Le volume occupé par les photos est <b>" + stats.photoFolderSize.size + "</b></li>";
+
+
                 messageBox(message);
             }
         })
     });
 
     $("#PDFButton").click(function () {
-        window.open("generatePDF.php","PDFWINDOW", "location=0,menubar=0,status=0,fullscreen=1");
+        window.open("generatePDF.php", "PDFWINDOW", "location=0,menubar=0,status=0,fullscreen=1");
     });
 
-
-
-    messageBox("Si vous êtes parent d'élève veuillez vous identifier pour apporter votre contribution à ce livre, en cliquant sur le bouton 'Mon espace'.");
+    if (getCookie("IMBACK") == "") {
+        setTimeout(function () { $("#userForm").click(); }, 1000);
+        setTimeout(function () { $("#userForm").click(); }, 5000);
+        setCookie("IMBACK","1",300);
+    }
 });

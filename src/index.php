@@ -139,7 +139,7 @@ logActivity($connection, "load page");
     <!-- ########################################################## -->
     <div id="fullModel"></div>
     <!-- ########################################################## -->
-    <div id="modify" class="button" style="position: absolute; top:10px; left:130px;">Modifier la recette </div>
+    <div id="modify" class="button" style="display:none; position: absolute; top:10px; left:130px;">Modifier la recette </div>
     <div id="statsButton" class="button adminButton" style="display:none; position:fixed;top:10px; right:10px;">Stats</div>
     <div id="PDFButton" class="button adminButton" style="display:none; position:fixed;top:10px; right:60px;">PDF</div>
 
@@ -153,17 +153,17 @@ logActivity($connection, "load page");
         <div id="loginform" class="innerForm" style="display:none;">
 
             <p>
-                Les informations d'identifications vous ont été communiquées
-                <br>dans le cahier de votre enfant.
-                <br>
+                <b>Pour créer et modifier des recetttes, il vous faut vous identifer.</b><br><br>
+                Les informations vous ont été communiquées dans le cahier de votre enfant.
+                <br><br>
                 <br> Identifiant
                 <br>
-                <input type="text" id="login" placeholder="Identifiant" name="uid" value="sferelloc">
+                <input type="text" id="login" placeholder="Identifiant" name="uid" value="">
 
                 <p>
                     Mot de passe
                     <br>
-                    <input type="password" id="password" name="upass" placeholder="******" value="19062010">
+                    <input type="password" id="password" name="upass" placeholder="******" value="">
 
                     <br>
                     <input type="submit" id="dologin" value="Valider">

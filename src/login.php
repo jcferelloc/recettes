@@ -38,7 +38,7 @@ if ( $pwdChecked ){
 		setcookie("id",$login);
 	}
 }
-logActivity($connection,"login " . $login);
+logActivity($connection,"login " , $login);
 echo json_encode($return);
 
 ?> 

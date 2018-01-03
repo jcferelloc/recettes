@@ -29,8 +29,11 @@ function getTable($nom){
 	return  $TABLES[$nom];
 }
 
-function logActivity($connection, $text){
+function logActivity($connection, $text, $pLogin=""){
   $login="";
+  if ( isset($pLogin)){
+    $login = $pLogin;
+  }
   if ( isset($_COOKIE["id"]) ){
     $login = $_COOKIE["id"];
   }
