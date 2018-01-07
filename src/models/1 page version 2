@@ -1,0 +1,257 @@
+{
+	"format":"A5", "orientation":"L", "font": "latoLight", "color0":"#1FD1C2", "color1":"#D2691E", "color2":"#8FCC1E", "color3":"#CF1E6E" , "colorNom" : "#00137F", "pages":[
+		{
+			"background-img":"img\/couverture1.jpg"
+		},
+		{
+			"elements":[
+				{"type":"text","align":"left","fontsize":"14","top":"30", "left":"25", "width":"160",  "color":"#081350","value":"@url@models\/page0"}
+			]
+
+		},
+		{
+			"elements":[
+				{"type":"text","value":"Sommaire","align":"center","fontsize":"30","top":"15", "left":"0", "width":"210", "color":"#A2D21E"},
+				{"type":"text","value":"Les entrées","align":"left","fontsize":"20","top":"55", "left":"55", "width":"100", "color":"@document@color0"},
+				{"type":"text","value":"Les plats","align":"left","fontsize":"20","top":"65", "left":"55", "width":"100", "color":"@document@color1"},
+				{"type":"text","value":"Les desserts","align":"left","fontsize":"20","top":"75", "left":"55", "width":"100", "color":"@document@color2"},
+				{"type":"text","value":"Autres recettes","align":"left","fontsize":"20","top":"85", "left":"55", "width":"100", "color":"@document@color3"},
+				{"type":"text","value":"Table des recettes","align":"left","fontsize":"20","top":"95", "left":"55", "width":"100", "color":"#0"},
+
+				{"type":"text","class":"pageNumber", "value":"@numero_page@entete_categorie@0","align":"right","fontsize":"15","top":"57", "left":"55", "width":"100", "color":"@document@color0"},
+				{"type":"text","class":"pageNumber", "value":"@numero_page@entete_categorie@1","align":"right","fontsize":"15","top":"67", "left":"55", "width":"100", "color":"@document@color1"},
+				{"type":"text","class":"pageNumber", "value":"@numero_page@entete_categorie@2","align":"right","fontsize":"15","top":"77", "left":"55", "width":"100", "color":"@document@color2"},
+				{"type":"text","class":"pageNumber", "value":"@numero_page@entete_categorie@3","align":"right","fontsize":"15","top":"87", "left":"55", "width":"100", "color":"@document@color3"},
+				{"type":"text","class":"pageNumber", "value":"@numero_page@entete_categorie@4","align":"right","fontsize":"15","top":"97", "left":"55", "width":"100", "color":"#0"}
+				
+			]
+		},
+		
+		{
+			"background-color": "@document@color0", "side":"right", "elements":[
+				{"type":"property", "name":"entete_categorie", "value":"0"},
+				{"type":"text","value":"Les entrées","align":"right","fontsize":"30","top":"80", "left":"0", "width":"190", "color":"#FFFFFF"}
+			]
+		}
+        ,
+		{
+			"section":{ 
+				"criteria":"categorie", "criteria_value":"0", "color":"@document@color0","pages":[
+					{
+						"background-color": "#FFFFFF", "elements":[
+						{"type":"property", "name":"recette_id", "value":"@page@id"},
+						{"type":"property", "name":"recette_userID", "value":"@page@userID"},
+						{"type":"property", "name":"recette_categorie", "value":"@page@categorie"},
+						{"type":"property", "name":"recette_titre", "value":"@page@titre"},
+						
+						{"type":"text", "name":"recette_titre", "value":"@page@titre","align":"Left","fontsize":"22","top":"7", "left":"65", "width":"130",  "color":"@document@color0"},
+						
+						{"type":"text", "name":"recette_nom", "value":"@page@nom","align":"left","fontsize":"14","top":"16", "left":"65", "width":"133",  "color":"@document@colorNom"},
+						{"type":"image","name":"recette_img_chef","url":"@page@url_chef", "top":"6", "left":"10", "width":"50"},
+					
+						
+						{"type":"text",  "value":"Ingrédients","align":"left","fontsize":"16","top":"58", "left":"10", "width":"50",  "color":"#A2D21E"},
+						{"type":"text", "name":"recette_ingredients", "value":"@page@ingredients","align":"left","fontsize":"9","top":"65", "left":"10", "width":"50",  "color":"#081350"},
+						
+						{"type":"text",  "value":"Préparation","align":"left","fontsize":"16","top":"28", "left":"65", "width":"124",  "color":"#A2D21E"},
+						{"type":"text", "name":"recette_preparation", "value":"@page@preparation","align":"left","fontsize":"9","top":"36", "left":"65", "width":"137",  "color":"#081350"},
+						
+						{"type":"text",  "value":"Indications","align":"left","fontsize":"16","top":"113", "left":"10", "width":"180",  "color":"#A2D21E"},
+						{"type":"text", "name":"recette_indications", "value":"@page@indications","align":"left","fontsize":"9","top":"119", "left":"10", "width":"137", "color":"#081350"},
+
+						{"type":"text", "name":"recette_presentation", "value":"@page@presentation","align":"left","fontsize":"9","top":"128", "left":"10", "width":"137",  "color":"#081350"},
+
+						{"type":"image","name":"recette_img_plat","url":"@page@url_plat", "top":"103", "left":"150", "width":"50"},
+						
+						{"type":"text", "name":"page_number", "value":"@numero_page@current@","align":"left","fontsize":"8","top":"144", "left":"102", "width":"19", "color":"#0"}
+						]
+					}
+				]
+			}
+		},
+		
+		{
+			"background-color": "@document@color1", "side":"right", "elements":[
+				{"type":"property", "name":"entete_categorie", "value":"1"},
+				{"type":"text","value":"Les plats","align":"right","fontsize":"30","top":"80", "left":"0", "width":"190", "color":"#FFFFFF"}
+			]
+		}
+        ,
+		{
+			"section":{ 
+				"criteria":"categorie", "criteria_value":"1", "pages":[
+					{
+						"background-color": "#FFFFFF", "elements":[
+						{"type":"property", "name":"recette_id", "value":"@page@id"},
+						{"type":"property", "name":"recette_userID", "value":"@page@userID"},
+						{"type":"property", "name":"recette_categorie", "value":"@page@categorie"},
+						{"type":"property", "name":"recette_titre", "value":"@page@titre"},
+						
+						{"type":"text", "name":"recette_titre", "value":"@page@titre","align":"Left","fontsize":"22","top":"7", "left":"65", "width":"130",  "color":"@document@color1"},
+						
+						{"type":"text", "name":"recette_nom", "value":"@page@nom","align":"left","fontsize":"14","top":"16", "left":"65", "width":"133",  "color":"@document@colorNom"},
+						{"type":"image","name":"recette_img_chef","url":"@page@url_chef", "top":"6", "left":"10", "width":"50"},
+					
+						
+						{"type":"text",  "value":"Ingrédients","align":"left","fontsize":"16","top":"58", "left":"10", "width":"50",  "color":"#A2D21E"},
+						{"type":"text", "name":"recette_ingredients", "value":"@page@ingredients","align":"left","fontsize":"9","top":"65", "left":"10", "width":"50",  "color":"#081350"},
+						
+						{"type":"text",  "value":"Préparation","align":"left","fontsize":"16","top":"28", "left":"65", "width":"124",  "color":"#A2D21E"},
+						{"type":"text", "name":"recette_preparation", "value":"@page@preparation","align":"left","fontsize":"9","top":"36", "left":"65", "width":"135",  "color":"#081350"},
+						
+						{"type":"text",  "value":"Indications","align":"left","fontsize":"16","top":"113", "left":"10", "width":"180",  "color":"#A2D21E"},
+						{"type":"text", "name":"recette_indications", "value":"@page@indications","align":"left","fontsize":"9","top":"119", "left":"10", "width":"137", "color":"#081350"},
+
+						{"type":"text", "name":"recette_presentation", "value":"@page@presentation","align":"left","fontsize":"9","top":"128", "left":"10", "width":"137",  "color":"#081350"},
+
+						{"type":"image","name":"recette_img_plat","url":"@page@url_plat", "top":"103", "left":"150", "width":"50"},
+						
+						{"type":"text", "name":"page_number", "value":"@numero_page@current@","align":"left","fontsize":"8","top":"144", "left":"102", "width":"19", "color":"#0"}
+						]
+					}
+					
+				]
+			}
+		},
+		
+		{
+			"background-color": "@document@color2", "side":"right", "elements":[
+				{"type":"property", "name":"entete_categorie", "value":"2"},
+				{
+					"type":"text","value":"Les desserts","align":"right","fontsize":"30","top":"80", "left":"0", "width":"190", "color":"#FFFFFF"
+				}
+			]
+		},
+		{
+			"section":{ 
+				"criteria":"categorie", "criteria_value":"2", "pages":[
+					{
+						"background-color": "#FFFFFF", "elements":[
+						{"type":"property", "name":"recette_id", "value":"@page@id"},
+						{"type":"property", "name":"recette_userID", "value":"@page@userID"},
+						{"type":"property", "name":"recette_categorie", "value":"@page@categorie"},
+						{"type":"property", "name":"recette_titre", "value":"@page@titre"},
+						
+						{"type":"text", "name":"recette_titre", "value":"@page@titre","align":"Left","fontsize":"22","top":"7", "left":"65", "width":"130",  "color":"@document@color2"},
+						
+						{"type":"text", "name":"recette_nom", "value":"@page@nom","align":"left","fontsize":"14","top":"16", "left":"65", "width":"133",  "color":"@document@colorNom"},
+						{"type":"image","name":"recette_img_chef","url":"@page@url_chef", "top":"6", "left":"10", "width":"50"},
+					
+						
+						{"type":"text",  "value":"Ingrédients","align":"left","fontsize":"16","top":"60", "left":"10", "width":"50",  "color":"#A2D21E"},
+						{"type":"text", "name":"recette_ingredients", "value":"@page@ingredients","align":"left","fontsize":"9","top":"68", "left":"10", "width":"50",  "color":"#081350"},
+						
+						{"type":"text",  "value":"Préparation","align":"left","fontsize":"16","top":"28", "left":"65", "width":"124",  "color":"#A2D21E"},
+						{"type":"text", "name":"recette_preparation", "value":"@page@preparation","align":"left","fontsize":"9","top":"36", "left":"65", "width":"137",  "color":"#081350"},
+						
+						{"type":"text",  "value":"Indications","align":"left","fontsize":"16","top":"113", "left":"10", "width":"180",  "color":"#A2D21E"},
+						{"type":"text", "name":"recette_indications", "value":"@page@indications","align":"left","fontsize":"9","top":"119", "left":"10", "width":"137", "color":"#081350"},
+
+						{"type":"text", "name":"recette_presentation", "value":"@page@presentation","align":"left","fontsize":"9","top":"128", "left":"10", "width":"137",  "color":"#081350"},
+						{"type":"image","name":"recette_img_plat","url":"@page@url_plat", "top":"103", "left":"150", "width":"50"},
+						
+						{"type":"text", "name":"page_number", "value":"@numero_page@current@","align":"left","fontsize":"8","top":"144", "left":"102", "width":"19", "color":"#0"}
+						]
+					}
+					
+				]
+			}
+		}
+        ,
+		
+		{
+			"background-color": "@document@color3", "side":"right", "elements":[
+				{"type":"property", "name":"entete_categorie", "value":"3"},
+				{
+					"type":"text","value":"Divers","align":"right","fontsize":"30","top":"80", "left":"0", "width":"190", "color":"#FFFFFF"
+				}
+			]
+		},
+		{
+			"section":{ 
+				"criteria":"categorie", "criteria_value":"3", "pages":[
+					{
+						"background-color": "#FFFFFF", "elements":[
+						{"type":"property", "name":"recette_id", "value":"@page@id"},
+						{"type":"property", "name":"recette_userID", "value":"@page@userID"},
+						{"type":"property", "name":"recette_categorie", "value":"@page@categorie"},
+						{"type":"property", "name":"recette_titre", "value":"@page@titre"},
+						
+						{"type":"text", "name":"recette_titre", "value":"@page@titre","align":"Left","fontsize":"22","top":"7", "left":"65", "width":"130",  "color":"@document@color3"},
+						
+						{"type":"text", "name":"recette_nom", "value":"@page@nom","align":"left","fontsize":"14","top":"16", "left":"65", "width":"133",  "color":"@document@colorNom"},
+						{"type":"image","name":"recette_img_chef","url":"@page@url_chef", "top":"6", "left":"10", "width":"50"},
+					
+						
+						{"type":"text",  "value":"Ingrédients","align":"left","fontsize":"16","top":"60", "left":"10", "width":"50",  "color":"#A2D21E"},
+						{"type":"text", "name":"recette_ingredients", "value":"@page@ingredients","align":"left","fontsize":"9","top":"68", "left":"10", "width":"50",  "color":"#081350"},
+						
+						{"type":"text",  "value":"Préparation","align":"left","fontsize":"16","top":"28", "left":"65", "width":"124",  "color":"#A2D21E"},
+						{"type":"text", "name":"recette_preparation", "value":"@page@preparation","align":"left","fontsize":"9","top":"36", "left":"65", "width":"137",  "color":"#081350"},
+						
+						{"type":"text",  "value":"Indications","align":"left","fontsize":"16","top":"113", "left":"10", "width":"180",  "color":"#A2D21E"},
+						{"type":"text", "name":"recette_indications", "value":"@page@indications","align":"left","fontsize":"9","top":"119", "left":"10", "width":"137", "color":"#081350"},
+
+						{"type":"text", "name":"recette_presentation", "value":"@page@presentation","align":"left","fontsize":"9","top":"128", "left":"10", "width":"137",  "color":"#081350"},
+						
+						{"type":"image","name":"recette_img_plat","url":"@page@url_plat", "top":"103", "left":"150", "width":"50"},
+						
+						{"type":"text", "name":"page_number", "value":"@numero_page@current@","align":"left","fontsize":"8","top":"144", "left":"102", "width":"19", "color":"#0"}
+						]
+					}
+					
+				]
+			}
+		},
+		{
+			"elements":[
+				{"type":"property", "name":"entete_categorie", "value":"4"},
+				{"type":"text","value":"Table des recettes","align":"center","fontsize":"30","top":"7", "left":"0", "width":"210", "color":"#A2D21E"},
+				{"type":"text","value":"Entrées","align":"left","fontsize":"20","top":"20", "left":"28", "width":"70", "color":"@document@color0"},
+				{"type":"list", "criteria":"categorie", "criteria_value":"0", "fields":["id", "titre", "@page@id"], "fontsize":"11","top":"30", "left":"20", "height":"5", "color":"#0", "class":"listIndex", "elements_fields" :[ 
+					{ "name" : "page", "width" : "10", "align" : "right" , "attribute":"id"},
+					{ "width" : "3", "align" : "right" },
+					{ "name" : "titre", "width" : "70", "align" : "left", "attribute":"id"}
+				]},
+
+				{"type":"text","value":"Plats","align":"left","fontsize":"20","top":"20", "left":"108", "width":"70", "color":"@document@color1"},
+				{"type":"list", "criteria":"categorie", "criteria_value":"1", "fields":["id", "titre", "@page@id"], "fontsize":"11","top":"30", "left":"100", "height":"5", "color":"#0", "class":"listIndex", "elements_fields" :[ 
+					{ "name" : "page", "width" : "10", "align" : "right", "attribute":"id" },
+					{ "width" : "3", "align" : "right" },
+					{ "name" : "titre", "width" : "70", "align" : "left", "attribute":"id"}
+				]}
+				
+				
+			]
+		},
+		{
+			"elements":[
+				{"type":"text","value":"Table des recettes","align":"center","fontsize":"30","top":"7", "left":"0", "width":"210", "color":"#A2D21E"},
+				{"type":"text","value":"Desserts","align":"left","fontsize":"20","top":"20", "left":"28", "width":"70", "color":"@document@color2"},
+				{"type":"list", "criteria":"categorie", "criteria_value":"2", "fields":["id", "titre", "@page@id"], "fontsize":"11","top":"30", "left":"20", "height":"5", "color":"#0", "class":"listIndex", "elements_fields" :[ 
+					{ "name" : "page", "width" : "10", "align" : "left" , "attribute":"id"},
+					{ "width" : "3", "align" : "right" },
+					{ "name" : "titre", "width" : "70", "align" : "left", "attribute":"id"}
+				]},
+
+				{"type":"text","value":"Autres","align":"left","fontsize":"20","top":"20", "left":"108", "width":"70", "color":"@document@color3"},
+				{"type":"list", "criteria":"categorie", "criteria_value":"3", "fields":["id", "titre", "@page@id"], "fontsize":"11","top":"30", "left":"100", "height":"5", "color":"#0", "class":"listIndex", "elements_fields" :[ 
+					{ "name" : "page", "width" : "10", "align" : "right", "attribute":"id" },
+					{ "width" : "3", "align" : "right" },
+					{ "name" : "titre", "width" : "70", "align" : "left", "attribute":"id"}
+				]}
+				
+				
+			]
+		},
+		{"side":"right"},
+		{
+			
+			 "elements":[
+				{"type":"image","url":"img/atable2.jpg", "top":"35", "left":"15", "width":"180"},
+				{"type":"text","align":"center","fontsize":"20","top":"125", "left":"30", "width":"150",  "color":"#081350","value":"A la recherche de sponsors ici !"}
+			]
+
+		}
+	]
+}

@@ -38,7 +38,7 @@ function checkRecette() {
     var errorMessage = "Merci de renseigner : <br>";
     if ($("#edit_nom").val() == "") {
         uploadOK = false;
-        errorMessage += "- Le nom du chef<br>"
+        errorMessage += "- Le nom du cuisinier<br>"
     }
 
     if ($("#edit_titre").val() == "") {
@@ -46,11 +46,7 @@ function checkRecette() {
         errorMessage += "- Le titre  de la recette<br>"
     }
 
-    if ($("#edit_presentation").val() == "") {
-        uploadOK = false;
-        errorMessage += "- La présentation de la recette<br>"
-    }
-
+    
     if ($("#edit_ingredients").val() == "") {
         uploadOK = false;
         errorMessage += "- Les ingrédients<br>"
@@ -84,6 +80,11 @@ function checkRecette() {
     upload_img_plat = false;
     upload_img_chef = false;
 
+    if ($("#edit_presentation").val() == "") {
+        message_text += "La zone de présentation n'est pas remplie, vous pouvez y ajouter un mot sympatique ...<br>"
+    }
+
+
     if ($('#img_plat_selector')[0].files.length == 1) {
 
         ratio = $("#img_plat").width() / $("#img_plat").height();
@@ -96,19 +97,24 @@ function checkRecette() {
         idPhotoPlat = "";
     }
     if ($('#img_chef_selector')[0].files.length == 1) {
-        upload_img_chef = true;
+        ratio = $("#img_plat").width() / $("#img_plat").height();
+        if (ratio < 1) {
+            message_text += "La photo du cuisinier n'a pas été sauvegardée car elle est en mode portrait. (elle doit être carrée ou en paysage)";
+        } else {
+            upload_img_chef = true;
+        }
     } else {
         idPhotoChef = "";
     }
 
 
-    if ($('#img_plat_selector')[0].files.length == 0 && $("#img_plat").attr('src') == "img/plat.jpg" &&
+    if ($('#img_plat_selector')[0].files.length == 0 && $("#img_plat").attr('src') == fallbackImgPlatEdit &&
         $('#img_chef_selector')[0].files.length == 0 && $("#img_chef").attr('src') == "img/chef.jpg") {
         message_text += "Pensez à y ajouter les photos ! ";
-    } else if ($('#img_plat_selector')[0].files.length == 0 && $("#img_plat").attr('src') == "img/plat.jpg") {
+    } else if ($('#img_plat_selector')[0].files.length == 0 && $("#img_plat").attr('src') == fallbackImgPlatEdit) {
         message_text += "Pensez à y ajouter la photo du plat ! ";
     } else if ($('#img_chef_selector')[0].files.length == 0 && $("#img_chef").attr('src') == "img/chef.jpg") {
-        message_text += "Pensez à y ajouter la photo du chef ! ";
+        message_text += "Pensez à y ajouter la photo du cuisinier ! ";
     }
 
     messageBox(message_text);
@@ -258,6 +264,49 @@ function checkImagePlatRatio() {
     }
 }
 
+function modifyRecette(pPrefix) {
+    if(pPrefix == undefined){
+        prefix = "";
+    }else{
+        prefix = pPrefix;
+    }
+    editBaseline = new Object;
+
+    editBaseline.titre=$("#" + prefix + "current_recette_titre").text();
+    editBaseline.presentation=$("#" + prefix + "current_recette_presentation").html().replace(/<br>/g,"\n");
+    editBaseline.ingredients=$("#" + prefix + "current_recette_ingredients").html().replace(/<br>/g,"\n");
+    editBaseline.preparation=$("#" + prefix + "current_recette_preparation").html().replace(/<br>/g,"\n");
+    editBaseline.indications=$("#" + prefix + "current_recette_indications").html().replace(/<br>/g,"\n");
+    editBaseline.nom=$("#" + prefix + "current_recette_nom").text();
+    editBaseline.categorie=$("#" + prefix + "current_recette_categorie").text();
+    editBaseline.plat=$("#" + prefix + "current_recette_img_plat").attr('src');
+    if (  editBaseline.plat == fallbackImgPlat){
+        editBaseline.plat = fallbackImgPlatEdit;
+    }
+    editBaseline.chef=$("#" + prefix + "current_recette_img_chef").attr('src');
+
+    $("#edit_id").text($("#" + prefix + "current_recette_id").text());
+    $("#edit_userID").text($("#" + prefix + "current_recette_userID").text());
+    $("#edit_titre").val(       editBaseline.titre);
+    $("#edit_presentation").val(editBaseline.presentation);
+    $("#edit_ingredients").val( editBaseline.ingredients);
+    $("#edit_preparation").val( editBaseline.preparation);
+    $("#edit_indications").val( editBaseline.indications);
+    $("#edit_nom").val(         editBaseline.nom);
+    $("#edit_categorie").val(   editBaseline.categorie);
+    $("#img_plat").attr("src",  editBaseline.plat);
+    $("#img_chef").attr("src",  editBaseline.chef);
+    $("#img_plat_selector").val("");
+    $("#img_chef_selector").val("");
+    checkEditRecetteChanges();
+
+    $("#page1").show();
+    $("#page2").hide();
+    $("#txtPage2").show();
+    $("#txtPage1").hide();
+    $("#fillForm").show();
+}
+
 $(document).ready(function () {
     $("#create").click(function () {
         $("#edit_id").text("");
@@ -282,40 +331,9 @@ $(document).ready(function () {
         closeUserForm();
     });
 
-    $("#modify").click(function () {
-        editBaseline = new Object;
-
-        editBaseline.titre=$("#current_recette_titre").text();
-        editBaseline.presentation=$("#current_recette_presentation").html().replace(/<br>/g,"\n");
-        editBaseline.ingredients=$("#current_recette_ingredients").html().replace(/<br>/g,"\n");
-        editBaseline.preparation=$("#current_recette_preparation").html().replace(/<br>/g,"\n");
-        editBaseline.indications=$("#current_recette_indications").html().replace(/<br>/g,"\n");
-        editBaseline.nom=$("#current_recette_nom").text();
-        editBaseline.categorie=$("#current_recette_categorie").text();
-        editBaseline.plat=$("#current_recette_img_plat").attr('src');
-        editBaseline.chef=$("#current_recette_img_chef").attr('src');
-
-        $("#edit_id").text($("#current_recette_id").text());
-        $("#edit_userID").text($("#current_recette_userID").text());
-        $("#edit_titre").val(       editBaseline.titre);
-        $("#edit_presentation").val(editBaseline.presentation);
-        $("#edit_ingredients").val( editBaseline.ingredients);
-        $("#edit_preparation").val( editBaseline.preparation);
-        $("#edit_indications").val( editBaseline.indications);
-        $("#edit_nom").val(         editBaseline.nom);
-        $("#edit_categorie").val(   editBaseline.categorie);
-        $("#img_plat").attr("src",  editBaseline.plat);
-        $("#img_chef").attr("src",  editBaseline.chef);
-        $("#img_plat_selector").val("");
-        $("#img_chef_selector").val("");
-        checkEditRecetteChanges();
-
-        $("#page1").show();
-        $("#page2").hide();
-        $("#txtPage2").show();
-        $("#txtPage1").hide();
-        $("#fillForm").show();
-    });
+    $("#modify").click(modifyRecette);
+    $("#G_modify").click(function(){ modifyRecette("G_")});
+    $("#D_modify").click(function(){ modifyRecette("D_")});
 
     $("#cancel").click(function () {
         if (isEditRecetteModified()) {

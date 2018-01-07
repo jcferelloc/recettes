@@ -3,7 +3,9 @@
 include 'parser.php';
 require "modelExpander.php";
 
-$model = getExpandedModel("modeles/modelExample.book");
+
+
+$model = getExpandedModel(1);
 
 function getModelJS($model){
     $modelJS ="";

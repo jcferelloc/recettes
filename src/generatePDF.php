@@ -7,40 +7,54 @@ require "modelExpander.php";
 include "formatSheet.php";
 
 $start = 0;
-if (isset($_GET["start"])){
+if (isset($_GET["start"])) {
     $start = htmlspecialchars($_GET["start"]);
 }
 
 $nb = 0;
-if (isset($_GET["nb"])){
+if (isset($_GET["nb"])) {
     $nb = htmlspecialchars($_GET["nb"]);
 }
 
+$modelNumber = 1;
+if ( isset($_GET["modelNumber"]) ){
+    $modelNumber = htmlspecialchars($_GET["modelNumber"]);
+}
 
-$model = getExpandedModel("modeles/modelExample.book");
-if ($nb==0){
+$model = getExpandedModel($modelNumber);
+if ($nb == 0) {
     $nb = count($model->{"pages"});
 }
 
-$pdf = new FPDF($model->{'orientation'},'mm', $model->{'format'});
-$pdf->AddFont('latoLight','','latolight.php');
-$pdf->SetFont('latoLight','',16);
-$pdf->SetMargins(0,0);
+$offsetLeft = 0;
+$offsetTop = 0;
+$format = $model->{'format'};
+if (isset($_GET["printA4"])) {
+    $offsetLeft = 15;
+    $offsetTop = 15;
+    $format = "A4";
+}
+
+$pdf = new FPDF($model->{'orientation'}, 'mm', $format);
+$pdf->AddFont('latoLight', '', 'latolight.php');
+$pdf->SetFont('latoLight', '', 16);
+$pdf->SetMargins(0, 0);
 $pdf->SetAutoPageBreak(false);
 
-for ( $number = $start; $number < $start+$nb ; $number++ ){
+for ($number = $start; $number < $start + $nb; $number++) {
     pagePDF($number);
 }
-$pdf->Output("I", "Livre recettes APE 2018" . date("j-m-Y") . ".pdf");
+$pdf->Output("I", "Livre recettes APE " . date("j-m-Y") . ".pdf");
 
 
-function pagePDF($number){
-    global $formatSheet, $pdf, $model;
-    
+function pagePDF($number)
+{
+    global $formatSheet, $pdf, $model, $offsetLeft, $offsetTop;
+
     $pdf->AddPage();
     $page = $model->{'pages'}[$number];
-    
-    if ( $model->{'orientation'} == "L"){
+
+    if ($model->{'orientation'} == "L") {
         $width = $formatSheet[$model->{'format'}][1];
         $height = $formatSheet[$model->{'format'}][0];
     } else {
@@ -48,219 +62,225 @@ function pagePDF($number){
         $height = $formatSheet[$model->{'format'}][1];
     }
 
-    if ( isset($page->{'background-color'})){
+    if (isset($page->{'background-color'})) {
         $rgb = toRGB($page->{'background-color'});
-        $pdf->SetFillColor($rgb[0],$rgb[1],$rgb[2]);
-        $pdf->Rect(0,0,$width,$height,'F');
-    }else if ( isset($page->{'background-img'})){
-        $pdf->Image($page->{'background-img'},0,0,$width,$height);
-    } /*else{
-        $pdf->Rect(0,0,$width,$height,'L');
-        $pdf->Rect(10,10,$width-20,$height-20,'L');
-    }*/
-    
-    if ( isset($page->{'elements'})){
-        foreach ($page->{"elements"} as $element ){
+        $pdf->SetFillColor($rgb[0], $rgb[1], $rgb[2]);
+        $pdf->Rect($offsetLeft, $offsetTop, $width, $height, 'F');
+    } else if (isset($page->{'background-img'})) {
+        $pdf->Image($page->{'background-img'}, $offsetLeft, $offsetTop, $width, $height);
+    } 
+    if (isset($_GET["printA4"])) {
+        $pdf->SetFillColor(100,100,100);
+        $pdf->Rect($offsetLeft, $offsetTop,$width,$height,'L');
+    }
+
+    if (isset($page->{'elements'})) {
+        foreach ($page->{"elements"} as $element) {
             elementPDF($element);
         }
     }
 }
 
 
-function elementPDF($element){
-    switch ( $element->{'type'}){
+function elementPDF($element)
+{
+    switch ($element->{'type'}) {
         case "text":
-        return textPDF($element);
+            return textPDF($element);
         case "image":
-        return imagePDF($element);
-        case "list" :
-        return listPDF($element);
+            return imagePDF($element);
+        case "list":
+            return listPDF($element);
     }
 }
 
 
-function textPDF($element){
-    global $pdf;
-    $value="";
-    $align="";
-    $left=0;
-    $top=0;
-    $width=0;
-    $height=0;
-    $fontsize=10;
-    $color="#000000";
-    
+function textPDF($element)
+{
+    global $pdf,$offsetLeft, $offsetTop;
+    $value = "";
+    $align = "";
+    $left = 0;
+    $top = 0;
+    $width = 0;
+    $height = 0;
+    $fontsize = 10;
+    $color = "#000000";
 
-    if ( isset($element->{'value'})){
+
+    if (isset($element->{'value'})) {
         $value = $element->{'value'};
     }
-    if ( isset($element->{'align'})){
+    if (isset($element->{'align'})) {
         switch ($element->{'align'}) {
-            case "right" :
-            $align ="R";
-            break;
-        case "left" :
-            $align ="L";
-            break;
-        case "center" :
-            $align ="C";
-            break;
+            case "right":
+                $align = "R";
+                break;
+            case "left":
+                $align = "L";
+                break;
+            case "center":
+                $align = "C";
+                break;
         }
     }
-    if ( isset($element->{'left'})){
-        $left = $element->{'left'} ;
-    }
-    if ( isset($element->{'top'})){
-        $top = $element->{'top'} ;
-    }
-    if ( isset($element->{'width'})){
-        $width =  $element->{'width'} ;
-    }
-    if ( isset($element->{'fontsize'})){
-        $fontsize = $element->{'fontsize'} ;
-    }
-    if ( isset($element->{'height'})){
-        $height =  $element->{'height'} ;
-    }else{
-        $height = $fontsize / 2.83464566929134;
-    }
-    if ( isset($element->{'color'})){
-        $color = $element->{'color'} ;
-    }
-
-    $pdf->SetXY($left, $top);
-    $pdf->SetFontSize($fontsize);
-    $rgb = toRGB($color);
-    $pdf->SetTextColor($rgb[0],$rgb[1],$rgb[2]);
-    $pdf->MultiCell($width,  $height , utf8_decode($value), 0, $align);
-}
-
-function imagePDF($element){
-    global $pdf;
-    $url="";
-    $left="0";
-    $top="0";
-    $width="0";
-    
-
-    if ( isset($element->{'url'})){
-        $url = $element->{'url'};
-    }
-    if ( isset($element->{'left'})){
+    if (isset($element->{'left'})) {
         $left = $element->{'left'};
     }
-    if ( isset($element->{'top'})){
-        $top =  $element->{'top'} ;
+    if (isset($element->{'top'})) {
+        $top = $element->{'top'};
     }
-    if ( isset($element->{'width'})){
+    if (isset($element->{'width'})) {
         $width = $element->{'width'};
     }
-    if (file_exists($url)){
-        $pdf->Image($url,$left,$top,$width);
-    }else{
-        $pdf->Image("img/missing.jpg",$left,$top,$width);
+    if (isset($element->{'fontsize'})) {
+        $fontsize = $element->{'fontsize'};
+    }
+    if (isset($element->{'height'})) {
+        $height = $element->{'height'};
+    } else {
+        $height = $fontsize / 2.83464566929134;
+    }
+    if (isset($element->{'color'})) {
+        $color = $element->{'color'};
     }
 
-    
+    $pdf->SetXY($offsetLeft+$left, $offsetTop+ $top);
+    $pdf->SetFontSize($fontsize);
+    $rgb = toRGB($color);
+    $pdf->SetTextColor($rgb[0], $rgb[1], $rgb[2]);
+    $pdf->MultiCell($width, $height, utf8_decode($value), 0, $align);
 }
-function listPDF($element){
-    global $pdf;
-    $fontsizeList="";
-    $topList=0;
-    $leftList=0;
-    $colorList="";
-    $heightList=0;
-    $alignList= " text-align:left; ";
+
+function imagePDF($element)
+{
+    global $pdf,$offsetLeft, $offsetTop;
+    $url = "";
+    $left = "0";
+    $top = "0";
+    $width = "0";
+
+
+    if (isset($element->{'url'})) {
+        $url = $element->{'url'};
+    }
+    if (isset($element->{'left'})) {
+        $left = $element->{'left'};
+    }
+    if (isset($element->{'top'})) {
+        $top = $element->{'top'};
+    }
+    if (isset($element->{'width'})) {
+        $width = $element->{'width'};
+    }
+    if (file_exists($url)) {
+        $pdf->Image($url, $offsetLeft+$left, $offsetTop+ $top, $width);
+    } else {
+        $pdf->Image("img/missing.jpg", $offsetLeft+$left, $offsetTop+ $top, $width);
+    }
+
+
+}
+function listPDF($element)
+{
+    global $pdf,$offsetLeft, $offsetTop;
+    $fontsizeList = "";
+    $topList = 0;
+    $leftList = 0;
+    $colorList = "";
+    $heightList = 0;
+    $alignList = " text-align:left; ";
     $classList = "";
     $height = 0;
 
-    if ( isset($element->{'fontsize'})){
-        $fontsizeList =  $element->{'fontsize'};
+    if (isset($element->{'fontsize'})) {
+        $fontsizeList = $element->{'fontsize'};
     }
-    if ( isset($element->{'top'})){
+    if (isset($element->{'top'})) {
         $topList = $element->{'top'};
     }
-    if ( isset($element->{'left'})){
+    if (isset($element->{'left'})) {
         $leftList = $element->{'left'};
     }
-    if ( isset($element->{'color'})){
-        $colorList = $element->{'color'} ;
+    if (isset($element->{'color'})) {
+        $colorList = $element->{'color'};
     }
-    if ( isset($element->{'height'})){
+    if (isset($element->{'height'})) {
         $heightList = $element->{'height'};
     }
-    if ( isset($element->{'align'})){
-        $alignList =  $element->{'align'};
+    if (isset($element->{'align'})) {
+        $alignList = $element->{'align'};
     }
-   
 
-    foreach ($element->{'fields'} as $listElement){
+
+    foreach ($element->{'fields'} as $listElement) {
         $left = $leftList;
-        foreach($element->{'elements_fields'} as $displayField){
-            if ( isset($displayField->{'name'}) && isset($listElement->{$displayField->{'name'}})){
-               
-                if ( isset($displayField->{'color'})){
+        foreach ($element->{'elements_fields'} as $displayField) {
+            if (isset($displayField->{'name'}) && isset($listElement->{$displayField->{'name'}})) {
+
+                if (isset($displayField->{'color'})) {
                     $color = $displayField->{'color'};
-                }else{
+                } else {
                     $color = $colorList;
                 }
-                if ( isset($displayField->{'fontsize'})){
-                    $fontsize = $displayField->{'fontsize'} ;
-                }else{
+                if (isset($displayField->{'fontsize'})) {
+                    $fontsize = $displayField->{'fontsize'};
+                } else {
                     $fontsize = $fontsizeList;
                 }
-                if ( isset($displayField->{'width'})){
+                if (isset($displayField->{'width'})) {
                     $width = $displayField->{'width'};
-                }else{
+                } else {
                     $width = "";
                 }
-                if ( isset($listElement->{'height'})){
-                    $height = $listElement->{'height'} ;
-                }else{
-                    $height = $heightList ;
+                if (isset($listElement->{'height'})) {
+                    $height = $listElement->{'height'};
+                } else {
+                    $height = $heightList;
                 }
-                
-                if ( isset($displayField->{'align'})){
+
+                if (isset($displayField->{'align'})) {
                     $align = $displayField->{'align'};
-                }else{
+                } else {
                     $align = $alignList;
                 }
                 switch ($align) {
-                    case "right" :
-                    $align ="R";
-                    break;
-                case "left" :
-                    $align ="L";
-                    break;
-                case "center" :
-                    $align ="C";
-                    break;
+                    case "right":
+                        $align = "R";
+                        break;
+                    case "left":
+                        $align = "L";
+                        break;
+                    case "center":
+                        $align = "C";
+                        break;
                 }
 
-                $pdf->SetXY($left, $topList);
+                $pdf->SetXY($offsetLeft+$left, $offsetTop+ $topList);
                 $pdf->SetFontSize($fontsize);
                 $rgb = toRGB($color);
-                $pdf->SetTextColor($rgb[0],$rgb[1],$rgb[2]);
+                $pdf->SetTextColor($rgb[0], $rgb[1], $rgb[2]);
                 
                 //echo $width .", ". $height .", ".utf8_decode($listElement->{$displayField->{'name'}}) .", ". $align ."<br>";
-                $pdf->MultiCell($width,  $height , utf8_decode($listElement->{$displayField->{'name'}}), 0, $align);
+                $pdf->MultiCell($width, $height, utf8_decode($listElement->{$displayField->{'name'}}), 0, $align);
 
             }
-            if ( isset($displayField->{'width'})){
-                $left += $displayField->{'width'} ;
+            if (isset($displayField->{'width'})) {
+                $left += $displayField->{'width'};
             }
         }
-        if ( isset($listElement->{'height'})){
-            $topList += $listElement->{'height'} ;
-        }else{
-            $topList += $heightList ;
+        if (isset($listElement->{'height'})) {
+            $topList += $listElement->{'height'};
+        } else {
+            $topList += $heightList;
         }
-         
+
     }
 }
 
-function toRGB ($hex){
+function toRGB($hex)
+{
     list($r, $g, $b) = sscanf($hex, "#%02x%02x%02x");
-    return array( $r, $g, $b);
+    return array($r, $g, $b);
 }
 ?>

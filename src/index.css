@@ -92,14 +92,15 @@
     border: dashed 1px #CACACA;
     resize: none;
     font-weight:bold;
+    background-color:#F4FFD1;
 }
 
 .dropzone {
     /*border: 2px dashed #bbb;
-    border-radius: 5px;*/
-    padding: 2mm;
+    border-radius: 5px;
+    padding: 2mm;*/
     text-align: center;
-    font-size: 12pt;
+    font-size: 9px;
     font-weight: bold;
     color: #333333;
     margin:0px;

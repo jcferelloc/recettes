@@ -4,6 +4,8 @@ var nbPage = 0;
 var mode = 2;
 var HTMLModel;
 var enterKeyCallBack = null;
+var fallbackImgPlat = 'img/fallback-img.jpg';
+var fallbackImgPlatEdit = 'img/plat.jpg';
 
 
 
@@ -82,7 +84,14 @@ var loadPage = function (number, id) {
     for (idxDiv = 0; idxDiv < divs.length; idxDiv++) {
         divId = $(divs[idxDiv]).attr('id');
         if (divId!= undefined && divId.indexOf("recette_") == 0 ) {
-            $(divs[idxDiv]).attr('id', "current_" + divId);
+            prefix="";
+            if ( $(divs[idxDiv]).parents("#doubleGaucheContent").length > 0){
+                prefix="G_";
+            }
+            if ( $(divs[idxDiv]).parents("#doubleDroiteContent").length > 0){
+                prefix="D_";
+            }
+            $(divs[idxDiv]).attr('id', prefix + "current_" + divId);
         }
     }
 
@@ -92,14 +101,45 @@ var loadPage = function (number, id) {
     } else {
         $("#modify").hide();
     }
+
+    if ($("#G_current_recette_id").text() != "" && (userData.admin == "1" || userData.admin == "2" || $("#G_current_recette_userID").text() == userData.userID )) {
+        $("#G_modify").show();
+    } else {
+        $("#G_modify").hide();
+    }
+
+    if ($("#D_current_recette_id").text() != "" && (userData.admin == "1" || userData.admin == "2" || $("#D_current_recette_userID").text() == userData.userID )) {
+        $("#D_modify").show();
+    } else {
+        $("#D_modify").hide();
+    }
 }
 function handleImgError(img) {
     if ($(img).attr("id") == "current_recette_img_plat") {
-        $("#current_recette_img_plat").attr('src', 'img/plat.jpg');
+        $("#current_recette_img_plat").css('max-height','1mm');
+        $("#current_recette_img_plat").attr('src', fallbackImgPlat);
+
     }
     if ($(img).attr("id") == "current_recette_img_chef") {
         $("#current_recette_img_chef").attr('src', 'img/chef.jpg');
     };
+    if ($(img).attr("id") == "G_current_recette_img_plat") {
+        $("#G_current_recette_img_plat").css('max-height','1mm');
+        $("#G_current_recette_img_plat").attr('src', fallbackImgPlat);
+
+    }
+    if ($(img).attr("id") == "G_current_recette_img_chef") {
+        $("#G_current_recette_img_chef").attr('src', 'img/chef.jpg');
+    };
+    if ($(img).attr("id") == "D_current_recette_img_plat") {
+        $("#D_current_recette_img_plat").css('max-height','1mm');
+        $("#D_current_recette_img_plat").attr('src', fallbackImgPlat);
+
+    }
+    if ($(img).attr("id") == "D_current_recette_img_chef") {
+        $("#D_current_recette_img_chef").attr('src', 'img/chef.jpg');
+    };
+    
 }
 
 
