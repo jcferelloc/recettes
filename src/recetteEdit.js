@@ -307,8 +307,23 @@ function modifyRecette(pPrefix) {
     $("#fillForm").show();
 }
 
+function getNbRecettesUser(){
+    var nb=0;
+    for (let index = 0; index < model.length; index++) {
+        if (model[index].recette_userID == userData.userID) {
+            nb++;
+        }
+    }
+    return nb;
+}
+
 $(document).ready(function () {
     $("#create").click(function () {
+        if ( getNbRecettesUser() > 0 ){
+            messageBox("Vous avez dejà créé une recette. Nous souhaitons que chaque famille crée une recette, ceci peut changer, nous vous informerons.");
+            return;
+        }
+
         $("#edit_id").text("");
         $("#edit_userID").text(userData.userID);
         $("#edit_titre").val("");

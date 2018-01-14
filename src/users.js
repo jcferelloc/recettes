@@ -2,7 +2,7 @@ var userData = Object;
 var userAuthentificated = false;
 var userFormOpen = false;
 var userFormSize = Object;
-var classText = ["CM2", "CM1", "CE2", "CE1", "CP", "GS", "MS", "PS", "TPS", "Enseignant"];
+var classText = ["CM2", "CM1", "CE2", "CE1", "CP", "GS", "MS", "PS", "TPS", "Enseignant","ATSEM", "AVS"];
 
 
 

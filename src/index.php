@@ -196,12 +196,12 @@ logActivity($connection, "load page");
                 <br><br>
                 <br> Identifiant
                 <br>
-                <input type="text" id="login" placeholder="Identifiant" name="uid" value="sferelloc">
+                <input type="text" id="login" placeholder="Identifiant" name="uid" value="">
 
                 <p>
                     Mot de passe
                     <br>
-                    <input type="password" id="password" name="upass" placeholder="******" value="19062010">
+                    <input type="password" id="password" name="upass" placeholder="******" value="">
 
                     <br>
                     <input type="submit" id="dologin" value="Valider">
